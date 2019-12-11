@@ -46,6 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Network\ClientBase.cs">
+      <Link>Network\ClientBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Network\CryptoClient.cs">
+      <Link>Network\CryptoClient.cs</Link>
+    </Compile>
+    <Compile Include="..\Network\CryptoServer.cs">
+      <Link>Network\CryptoServer.cs</Link>
+    </Compile>
+    <Compile Include="..\Network\ServerBase.cs">
+      <Link>Network\ServerBase.cs</Link>
+    </Compile>
     <Compile Include="ServerForm.cs">
       <SubType>Form</SubType>
     </Compile>

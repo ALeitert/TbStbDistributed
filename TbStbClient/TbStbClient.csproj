@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Network\ClientBase.cs">
+      <Link>Network\ClientBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Network\CryptoClient.cs">
+      <Link>Network\CryptoClient.cs</Link>
+    </Compile>
     <Compile Include="ClientForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,6 +83,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
