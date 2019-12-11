@@ -2,14 +2,6 @@
 // Created by Holly Strauch on 10/1/2019.
 //
 
-
-/* structure of data (2d array for now, change to hashsets):
-*		length: number of vertices
-*		i: neighbors of vertex i
-*
- * Check if pointers are all correct!
-*/
-
 #include "Graph.h"
 #include <unordered_set>
 #include <vector>
@@ -51,14 +43,6 @@ Graph::Graph (ifstream & infile) {
     infile.close();
 }
 
-//constructor for empty graph with set capacity
-Graph::Graph (const int cap){
-    noOfVertices = 0;
-    capacity = cap;
-    incomingEdges = new h_set*[cap];
-    outgoingEdges = new h_set*[cap];
-}
-
 //copy constructor
 Graph::Graph (const Graph & orig){
     this->noOfVertices = orig.noOfVertices;
@@ -75,95 +59,6 @@ Graph::Graph (const Graph & orig){
             incomingEdges[i]->insert(vert);
             outgoingEdges[i]->insert(vert);
         }
-    }
-}
-
-void Graph::removeVertex(int vInd){
-
-    h_set::const_iterator got;
-    for(const int x: *incomingEdges[vInd]){
-        //makes sure it exists, then erase;
-        got = outgoingEdges[x]->find (vInd);
-        if(got != outgoingEdges[x]->end()){
-            outgoingEdges[x]->erase(vInd);
-        }
-    }
-
-    for(const int x: *outgoingEdges[vInd]){
-        //makes sure it exists, then erase;
-        got = incomingEdges[x]->find(vInd);
-        if (got != incomingEdges[x]->end()){
-            incomingEdges[x]->erase(vInd);
-        }
-    }
-
-    noOfVertices--;
-    delete incomingEdges[vInd];
-    delete outgoingEdges[vInd];
-    incomingEdges[vInd] = nullptr;
-    outgoingEdges[vInd] = nullptr;
-}
-
-void Graph::addVertex(const int newVertex) {
-    if(incomingEdges[newVertex] || outgoingEdges[newVertex]){
-        cout << "Vertex already exists" << endl;
-    }else if (noOfVertices == capacity) {
-        cout << "Graph is at max capacity" << endl;
-    }else{
-        incomingEdges[newVertex] = new h_set;
-        outgoingEdges[newVertex] = new h_set;
-        noOfVertices++;
-    }
-}
-
-void Graph::addEdge(int vert1, int vert2){
-    addDirectedEdge(vert1, vert2);
-    addDirectedEdge(vert2, vert1);
-}
-
-void Graph::addDirectedEdge(int vertOut, int vertIn) {
-    if( outgoingEdges[vertOut]->count(vertIn) != 0 &&
-        incomingEdges[vertIn]->count(vertOut) != 0){
-
-        cout << "Edge " << vertOut << "->" << vertIn << " already exists" << endl;
-    }else {
-        incomingEdges[vertIn]->insert(vertOut);
-        outgoingEdges[vertOut]->insert(vertIn);
-    }
-}
-
-void Graph::printGraph(){
-    int currVertex = 0;
-
-    cout << "Incoming Edges" << endl;
-    for(int i = 0; i < this->noOfVertices; i++){
-
-        //required in-case vertices have been deleted (non-consecutive vertices)
-        while (!incomingEdges[currVertex]) {
-            currVertex++;
-        }
-        for (const int x: *incomingEdges[currVertex]) {
-            cout << x << " ";
-        }
-
-        cout << endl;
-        currVertex++;
-    }
-
-    currVertex = 0;
-
-    cout << "Outgoing Edges" << endl;
-    for(int i = 0; i < this->noOfVertices; i++){
-        //required in case vertices have been deleted (non-consecutive vertices)
-        while (!outgoingEdges[currVertex]) {
-            currVertex++;
-        }
-        for (const int x: *outgoingEdges[currVertex]) {
-            cout << x << " ";
-        }
-
-        cout << endl;
-        currVertex++;
     }
 }
 
@@ -247,8 +142,4 @@ int Graph::findConnComp(int *partition, int pLength){
 
 int Graph::getVerts(){
     return this->noOfVertices;
-}
-
-int Graph::getCapacity(){
-    return this->capacity;
 }
