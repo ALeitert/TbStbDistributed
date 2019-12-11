@@ -7,6 +7,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TbStbServer", "TbStbServer\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TbStbClient", "TbStbClient\TbStbClient.csproj", "{E031720C-6D36-40C7-9FAF-80429AD38CEA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Network", "Network", "{CFCC4D52-2DA2-418F-ABE9-56F7A936EEA6}"
+	ProjectSection(SolutionItems) = preProject
+		Network\ClientBase.cs = Network\ClientBase.cs
+		Network\CryptoClient.cs = Network\CryptoClient.cs
+		Network\CryptoServer.cs = Network\CryptoServer.cs
+		Network\ServerBase.cs = Network\ServerBase.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
