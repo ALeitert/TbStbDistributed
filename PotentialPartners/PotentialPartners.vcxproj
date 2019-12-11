@@ -19,7 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Graph.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PotPart.cpp" />
+    <ClCompile Include="STBAlg.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Graph.h" />
+    <ClInclude Include="PotPart.h" />
+    <ClInclude Include="STBAlg.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9B87D3DF-5132-4D1C-8934-7423EDCE1CB1}</ProjectGuid>
