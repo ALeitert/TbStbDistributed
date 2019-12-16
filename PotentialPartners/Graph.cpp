@@ -59,6 +59,14 @@ Graph::Graph(istream& in)
     }
 }
 
+const int* Graph::operator[](int vId) const
+{
+    if (edges == nullptr) return nullptr;
+    if (vId < 0 || vId > noOfVertices) return nullptr;
+
+    return edges[vId];
+}
+
 int Graph::getVerts()
 {
     return this->noOfVertices;

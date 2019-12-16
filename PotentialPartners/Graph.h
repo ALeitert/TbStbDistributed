@@ -18,6 +18,8 @@ public:
     Graph(const Graph& g);
     explicit Graph(istream& in);
 
+    const int* operator[] (int vId) const;
+
     int getVerts();
 
     vector<int>* bfs(int startId);
