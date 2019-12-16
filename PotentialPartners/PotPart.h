@@ -2,30 +2,35 @@
 // Created by Holly Strauch on 12/5/2019.
 //
 
-#ifndef STBRESEARCH_POTPART_H
-#define STBRESEARCH_POTPART_H
+#include <iostream>
 #include <unordered_set>
 
 using namespace std;
 using h_set = std::unordered_set<int>;
 
-class PotPart {
+#ifndef STBRESEARCH_POTPART_H
+#define STBRESEARCH_POTPART_H
 
-    h_set *nC;
-    int numCC;
-
+class PotPart
+{
 public:
-    explicit PotPart(int numCC);
     PotPart();
-    explicit PotPart(ifstream & file);
+    explicit PotPart(int numCC);
+    explicit PotPart(istream& in);
+
     ~PotPart();
-    h_set* getSet(int ccNo);
-    void addToSet(int ccNo, int value);
+
     int getNumCC();
     int getCCSize(int ccNo);
-    void print(ostream &out);
 
+    h_set* getSet(int ccNo);
+    void addToSet(int ccNo, int value);
+
+	void print(ostream& out);
+
+private:
+    int numCC;
+    h_set* nC;
 };
 
-
-#endif //STBRESEARCH_POTPART_H
+#endif

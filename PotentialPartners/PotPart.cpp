@@ -3,76 +3,92 @@
 //
 
 #include "PotPart.h"
-#include <iostream>
-#include <fstream>
 
-PotPart::~PotPart() {
-    if (nC != nullptr) delete[] nC;
-}
-
-PotPart::PotPart(){
+PotPart::PotPart()
+{
+    numCC = 0;
     nC = nullptr;
-    this->numCC = 0;
 }
 
-PotPart::PotPart(int numCC) {
+PotPart::PotPart(int numCC)
+{
     nC = new h_set[numCC - 1];
     this->numCC = numCC - 1;
 }
 
 /**
- * \brief Reads in data formatted as in printPotPart() and creates a new PotPart
- * @param file The ifstream to the file the data is stored in
+ * \brief Reads in data formatted as in printPotPart() and creates a new PotPart.
+ * @param in The stream to the file the data is stored in
  * @return
  */
-PotPart::PotPart(ifstream & file) {
+PotPart::PotPart(istream& in)
+{
     int numCC;
-    file >> numCC;
+    in >> numCC;
+
     this->numCC = numCC;
     this->nC = new h_set[numCC];
 
-    for (int i = 0; i < numCC; i++) {
+    for (int i = 0; i < numCC; i++)
+    {
         int numPP;
-        file >> numPP;
+        in >> numPP;
 
-        for (int p = 0; p < numPP; p++) {
+        for (int p = 0; p < numPP; p++)
+        {
             int partner;
-            file >> partner;
+            in >> partner;
             this->nC[i].insert(partner);
         }
     }
 }
 
-h_set* PotPart::getSet(int ccNo) {
-    return &nC[ccNo];
+PotPart::~PotPart()
+{
+    if (nC != nullptr)
+    {
+        delete[] nC;
+    }
 }
 
-int PotPart::getNumCC() {
+int PotPart::getNumCC()
+{
     return this->numCC;
 }
 
-int PotPart::getCCSize(int ccNo){
+int PotPart::getCCSize(int ccNo)
+{
     return this->nC[ccNo].size();
 }
 
-void PotPart::addToSet(int ccNo, int value){
+h_set* PotPart::getSet(int ccNo)
+{
+    return &nC[ccNo];
+}
+
+void PotPart::addToSet(int ccNo, int value)
+{
     nC[ccNo].insert(value);
 }
 
 /**
- * \brief prints out potential partners in the format:
+ * \brief Prints out potential partners in the format:
  * <number of cc for u> <number of pp in cc1> <p1> <p2> ... <pn> <number of pp in ccn>...
  * @param out ostream specifies what stream to send the data to
  */
-void PotPart::print(ostream &out) {
-    out << this->numCC << " " << flush;
+void PotPart::print(ostream& out)
+{
+    out << this->numCC;
 
-    for (int i = 0; i < this->numCC; i++) {
+    for (int i = 0; i < this->numCC; i++)
+    {
+        out << " " << nC[i].size();
 
-        out << this->getCCSize(i) << " " << flush;
-        for (const int part: nC[i]) {
-            out << part << " ";
+        for (const int part : nC[i])
+        {
+            out << " " << part;
         }
     }
+
     out << endl;
 }
