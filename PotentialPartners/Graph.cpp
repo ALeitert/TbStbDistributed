@@ -124,7 +124,7 @@ int Graph::findConnComp(int* partition, int pLength)
     int pNum = 1;
 
     // Check if each point has been assigned.
-    for (int p = 0; p < pLength; p++)
+    for (int p = 0; p < pLength; p++, pNum++)
     {
         if (partition[p] != -1) continue;
 
@@ -148,8 +148,6 @@ int Graph::findConnComp(int* partition, int pLength)
                 partition[uId] = pNum;
             }
         }
-
-        pNum++;
     }
 
     return pNum;

@@ -22,7 +22,6 @@ public:
     PotPart* findPotPart(Graph& graph, int u, int rho);
 
 private:
-    void setUNeigh(vector<int>& q, int* partition);
     int* init_partition(int size);
     h_set* findCNeigh(int numCC, int* partition, Graph& graph, vector<int>* uNeigh, int rho);
     PotPart* uPartners(int* partition, Graph& graph, h_set* ccNeighbors, vector<int>& scope, int rho, int numCC);

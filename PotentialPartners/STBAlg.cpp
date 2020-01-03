@@ -52,14 +52,25 @@ bool STBAlg::runAlg(Graph& graph, int rho)
 
 PotPart* STBAlg::findPotPart(Graph& graph, int uId, int rho)
 {
-    vector<int>* uNeigh = graph.limitedBFS(uId, rho);
+    vector<int>* scope = graph.limitedBFS(uId, 2 * rho);
     int* partition = init_partition(graph.getVerts());
-    setUNeigh(uNeigh[0], partition);
+
+    // Find neighbours up to distance rho.
+    vector<int> uNeigh[2];
+    for (int i = 0; scope[1][i] <= rho; i++)
+    {
+        int vId = scope[0][i];
+        int vDis = scope[1][i];
+
+        uNeigh[0].push_back(vId);
+        uNeigh[1].push_back(vId);
+
+        partition[vId] = 0;
+    }
 
     int numCC = graph.findConnComp(partition, graph.getVerts());
     h_set* ccNeighbors = findCNeigh(numCC, partition, graph, uNeigh, rho);
 
-    vector<int>* scope = graph.limitedBFS(uId, 2 * rho);
     PotPart* partners = uPartners(partition, graph, ccNeighbors, scope[0], rho, numCC);
 
     delete[] partition;
@@ -162,11 +173,16 @@ PotPart* STBAlg::uPartners(int* partition, Graph& graph, h_set* ccNeighbors, vec
 {
     PotPart* uPartners = new PotPart(numCC);
 
-    //begin at 1 to exclude u itself
+    // Begin at 1 to exclude u itself.
     for (int i = 1; i < scope.size(); i++)
     {
         int vId = scope[i];
-        vector<int> *vVect = graph.limitedBFS(vId, rho);
+
+        // Vertex v (vId) is apotential partner of u (scope[0]) for some C in C[u] if
+        //   (i) N^rho[v] contains N(C) (ccNeighbors) and
+        //  (ii) N^rho[v] intersects C
+        
+        vector<int>* vVect = graph.limitedBFS(vId, rho);
         h_set vNeigh;
 
         bool* ncCheck = new bool[uPartners->getNumCC()];
@@ -176,11 +192,11 @@ PotPart* STBAlg::uPartners(int* partition, Graph& graph, h_set* ccNeighbors, vec
             ncCheck[c] = false;
         }
 
-        //get v neighborhood into hash set
-        //mark every partition that has a vertex contained in N[v]
+        // Add v neighborhood into hash set.
+        // Mark every partition that has a vertex contained in N[v] (condition (ii)).
         for (int j = 0; j < vVect[0].size(); j++)
         {
-            int wId = vVect[0].at(j);
+            int wId = vVect[0][j];
             vNeigh.insert(wId);
 
             if (partition[wId] == 0) continue;
@@ -188,12 +204,12 @@ PotPart* STBAlg::uPartners(int* partition, Graph& graph, h_set* ccNeighbors, vec
             ncCheck[partition[wId] - 1] = true;
         }
 
-        //go through ccNeighbors and see which are in vNeigh
+        // Go through ccNeighbors and see which are in vNeigh (condition (i)).
         for (int c = 0; c < uPartners->getNumCC(); c++)
         {
             if (!ncCheck[c]) continue;
 
-            //check if all neighbors of C in u are in V
+            // Check if all neighbours of C are in N[v] (condition (i)).
             for (const int vert : ccNeighbors[c])
             {
                 if (vNeigh.count(vert) == 0)
@@ -215,20 +231,8 @@ PotPart* STBAlg::uPartners(int* partition, Graph& graph, h_set* ccNeighbors, vec
         delete[] ncCheck;
         delete[] vVect;
     }
-    return uPartners;
-}
 
-/**
- * \brief Sets all vertices from a u neighborhood to 0 in a partition array
- * @param u, the vertices in N[u]
- * @param partition An array where the indices correspond to each vertex in the graph
- */
-void STBAlg::setUNeigh(vector<int>& u, int* partition)
-{
-    for (int i = 0; i < u.size(); i++)
-    {
-        partition[u.at(i)] = 0;
-    }
+    return uPartners;
 }
 
 
@@ -250,7 +254,8 @@ int* STBAlg::init_partition(int size)
 }
 
 /**
- * \brief Returns an array of sets of N[C], which are the neighbors of each connected component.
+ * \brief Determines the sets N(C) for each connected component.
+ * That is, the vertices in N^rho[u] which are adjacent to a vertex in C.
  * @param numCC - The number connected components
  * @param partition - An array that stores which connected component a vertex is in
  * @param graph - The original graph
@@ -262,12 +267,6 @@ h_set* STBAlg::findCNeigh(int numCC, int* partition, Graph& graph, vector<int>* 
 {
     h_set* ccNeigh = new h_set[numCC - 1];
 
-    h_set uNeigh_set;
-    for (int i = 0; i < uNeigh[0].size(); i++)
-    {
-        uNeigh_set.insert(uNeigh[0][i]);
-    }
-
     // Search through all of the furthest vertices in u Neighborhood.
     for (int index = uNeigh[0].size() - 1; uNeigh[1][index] == rho; index--)
     {
@@ -278,18 +277,14 @@ h_set* STBAlg::findCNeigh(int numCC, int* partition, Graph& graph, vector<int>* 
 
         for (int i = 1; i <= deg; i++)
         {
-            // Find neighbor and its partition
+            // Find neighbor and its partition.
             int nId = neighs[i];
 
-            // Have to check that it is not in uNeigh.
-            if (uNeigh_set.count(nId) == 0)
-            {
-                int part = partition[nId];
+            int part = partition[nId];
+            if (part == 0) continue;
 
-                if (part == 0) continue;
-                //add to CC neighbor set
-                ccNeigh[part - 1].insert(vId);
-            }
+            // Add to CC neighbor set.
+            ccNeigh[part - 1].insert(vId);
         }
     }
 
