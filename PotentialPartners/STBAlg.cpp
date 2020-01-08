@@ -108,7 +108,7 @@ int STBAlg::eliminate(PotPart** partners, h_set* dependents, int numVerts)
     bool* remain = new bool[numVerts];
     memset(remain, true, numVerts);
 
-    for (int qInd = 0; qInd < q.size(); qInd++, sets--)
+    for (size_t qInd = 0; qInd < q.size(); qInd++, sets--)
     {
         for (const int vert : dependents[q[qInd]])
         {
@@ -174,7 +174,7 @@ PotPart* STBAlg::uPartners(int* partition, Graph& graph, h_set* ccNeighbors, vec
     PotPart* uPartners = new PotPart(numCC);
 
     // Begin at 1 to exclude u itself.
-    for (int i = 1; i < scope.size(); i++)
+    for (size_t i = 1; i < scope.size(); i++)
     {
         int vId = scope[i];
 
@@ -194,7 +194,7 @@ PotPart* STBAlg::uPartners(int* partition, Graph& graph, h_set* ccNeighbors, vec
 
         // Add v neighborhood into hash set.
         // Mark every partition that has a vertex contained in N[v] (condition (ii)).
-        for (int j = 0; j < vVect[0].size(); j++)
+        for (size_t j = 0; j < vVect[0].size(); j++)
         {
             int wId = vVect[0][j];
             vNeigh.insert(wId);

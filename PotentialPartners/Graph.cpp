@@ -88,7 +88,7 @@ vector<int>* Graph::limitedBFS(int startId, int maxDis)
     q.push_back(startId);
     visited.insert(startId);
 
-    for (int qInd = 0; qInd < q.size() && distances[qInd] < maxDis; qInd++)
+    for (size_t qInd = 0; qInd < q.size() && distances[qInd] < maxDis; qInd++)
     {
         int vId = q[qInd];
         int vDeg = edges[vId][0];
@@ -133,7 +133,7 @@ int Graph::findConnComp(int* partition, int pLength)
         vector<int> q;
         q.push_back(p);
 
-        for (int qInd = 0; qInd < q.size(); qInd++)
+        for (size_t qInd = 0; qInd < q.size(); qInd++)
         {
             int vId = q[qInd];
             int vDeg = edges[vId][0];
