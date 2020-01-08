@@ -63,7 +63,7 @@ PotPart* STBAlg::findPotPart(Graph& graph, int uId, int rho)
         int vDis = scope[1][i];
 
         uNeigh[0].push_back(vId);
-        uNeigh[1].push_back(vId);
+        uNeigh[1].push_back(vDis);
 
         partition[vId] = 0;
     }
