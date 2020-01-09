@@ -89,7 +89,27 @@ namespace TbStb.Client
                 return;
             }
 
-            throw new NotImplementedException();
+            // Message format: "graphName|task|vId|rho"
+            //   graphName: The graph to perform computations on.
+            //        task: The task to do. Either "partner" to determine potential partners,
+            //              or "clDist" to determine the distance to the clusters of a layering partition.
+            //         vId: The vertex to perform the task on.
+            //         rho: The radius when checking potential partners. Not given for task "clDist".
+
+
+            string[] msgParts = msg.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (msgParts == null || msgParts.Length < 3)
+            {
+                Log("Invalid message from server: " + msg);
+            }
+            else
+            {
+                Log("Server: " + msg);
+            }
+
+            // Give message to background worker.
+            bgw.RunWorkerAsync(msgParts);
         }
 
         private void bgw_DoWork(object sender, DoWorkEventArgs e)
