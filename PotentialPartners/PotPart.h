@@ -26,7 +26,8 @@ public:
     h_set* getSet(int ccNo);
     void addToSet(int ccNo, int value);
 
-	void print(ostream& out);
+    void print(ostream& out);
+    void printBinary(ostream& out);
 
 private:
     int numCC;

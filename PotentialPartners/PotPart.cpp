@@ -92,3 +92,30 @@ void PotPart::print(ostream& out)
 
     out << endl;
 }
+
+void writeInt(ostream& out, int num)
+{
+    char buffer[4];
+    for (int i = 0; i < 4; i++)
+    {
+        buffer[i] = (num >> (i * 8));
+    }
+    out.write(buffer, 4);
+}
+
+void PotPart::printBinary(ostream& out)
+{
+    writeInt(out, this->numCC);
+
+    for (int i = 0; i < this->numCC; i++)
+    {
+        writeInt(out, nC[i].size());
+
+        for (const int part : nC[i])
+        {
+            writeInt(out, part);
+        }
+    }
+
+    out.flush();
+}
