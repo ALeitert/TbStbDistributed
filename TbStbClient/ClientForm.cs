@@ -114,10 +114,56 @@ namespace TbStb.Client
 
         private void bgw_DoWork(object sender, DoWorkEventArgs e)
         {
-            throw new NotImplementedException();
+            string[] msgParts = (string[])e.Argument;
+
+            string graph = msgParts[0];
+            string task = msgParts[1];
+            int vId = int.Parse(msgParts[2]);
+
+            byte[] result = null;
+
+            switch (msgParts[1])
+            {
+                case "partner":
+                    int rho = int.Parse(msgParts[3]);
+                    result = FindPotentialPartners(graph, vId, rho);
+                    break;
+
+                case "clDist":
+                    result = FindDistanceToClusters(graph, vId);
+                    break;
+
+                default:
+                    // Invalid message; do nothing.
+                    break;
+            }
+
+            e.Result = result;
         }
 
         private void bgw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Calls the PotentialPartner program to compute the potential partners of the given vertex.
+        /// </summary>
+        /// <returns>
+        /// The message to the server as byte-array.
+        /// </returns>
+        private byte[] FindPotentialPartners(string graph, int vId, int rho)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Determines the "distance" of the given vertex to all clusters in a layering partition.
+        /// </summary>
+        /// <returns>
+        /// The message to the server as byte-array.
+        /// </returns>
+        private byte[] FindDistanceToClusters(string graph, int vId)
         {
             throw new NotImplementedException();
         }
