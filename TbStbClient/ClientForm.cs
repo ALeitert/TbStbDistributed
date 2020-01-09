@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
@@ -16,6 +18,9 @@ namespace TbStb.Client
 
         private BackgroundWorker bgw;
         private delegate void ProcessMessageDelegate(string msg);
+
+        private Graph g = null;
+        private Process partnerProcess = null;
 
         public ClientForm()
         {
@@ -144,6 +149,27 @@ namespace TbStb.Client
         private void bgw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             throw new NotImplementedException();
+        }
+
+        private void LoadGraph(string name)
+        {
+            if (g != null && g.Name == name)
+            {
+                // Graph still loaded; do nothing.
+                return;
+            }
+
+            if (partnerProcess != null && !partnerProcess.HasExited)
+            {
+                partnerProcess.Kill();
+            }
+            partnerProcess = null;
+
+            using (FileStream fs = new FileStream(name + ".txt", FileMode.Open))
+            {
+                g = new Graph(fs);
+                g.Name = name;
+            }
         }
 
         /// <summary>
