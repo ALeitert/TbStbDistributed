@@ -43,6 +43,8 @@ namespace TbStb.Client
             }
         }
 
+        public string Name { get; set; }
+
         public int Vertices
         {
             get

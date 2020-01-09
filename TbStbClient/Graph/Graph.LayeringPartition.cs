@@ -4,7 +4,22 @@ namespace TbStb.Client
 {
     partial class Graph
     {
-        public int[][][] LayeringPartition(int startId)
+        private int[][][] layPartition = null;
+
+        public int[][][] LayeringPartition
+        {
+            get
+            {
+                if (layPartition == null)
+                {
+                    layPartition = GetLayeringPartition(0);
+                }
+
+                return layPartition;
+            }
+        }
+
+        private int[][][] GetLayeringPartition(int startId)
         {
             BfsResult bfs = Bfs(startId);
 
