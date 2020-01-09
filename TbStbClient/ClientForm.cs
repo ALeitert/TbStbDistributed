@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text;
 using System.Windows.Forms;
 
 namespace TbStb.Client
@@ -11,6 +12,8 @@ namespace TbStb.Client
 
         private bool logActive = true;
         private delegate void LogDelegate(string text);
+
+        private delegate void ProcessMessageDelegate(string msg);
 
         public ClientForm()
         {
@@ -61,11 +64,25 @@ namespace TbStb.Client
 
         private void Socket_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
+            string msg = Encoding.UTF8.GetString(e.RawMessage);
+            ProcessMessage(msg);
         }
 
         private void Socket_ConnectionEnded(object sender, EventArgs e)
         {
             Log("Server Disconnected.");
+        }
+
+        private void ProcessMessage(string msg)
+        {
+            // Ensure method is called in main thread.
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new ProcessMessageDelegate(ProcessMessage), new object[] { msg });
+                return;
+            }
+
+            throw new NotImplementedException();
         }
 
     }
