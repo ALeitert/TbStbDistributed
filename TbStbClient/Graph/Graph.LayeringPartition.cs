@@ -4,9 +4,9 @@ namespace TbStb.Client
 {
     partial class Graph
     {
-        private int[][][] layPartition = null;
+        private int[][] layPartition = null;
 
-        public int[][][] LayeringPartition
+        public int[][] LayeringPartition
         {
             get
             {
@@ -19,7 +19,7 @@ namespace TbStb.Client
             }
         }
 
-        private int[][][] GetLayeringPartition(int startId)
+        private int[][] GetLayeringPartition(int startId)
         {
             BfsResult bfs = Bfs(startId);
 
@@ -39,14 +39,12 @@ namespace TbStb.Client
                 layers[dist].Add(vId);
             }
 
-            int[][][] layPart = new int[layers.Count][][];
-
+            List<List<int>> layPart = new List<List<int>>();
             UnionFind uf = new UnionFind(Vertices);
 
             for (int l = layers.Count - 1; l > 0; l--)
             {
-
-                // Determine connected components of current layer
+                // Determine connected components of current layer.
                 foreach (int vId in layers[l])
                 {
                     uf.MakeRoot(vId);
@@ -61,35 +59,52 @@ namespace TbStb.Client
                     }
                 }
 
+                int startInd = layPart.Count;
                 int clusterCount = uf.GetRootCount();
-                List<int>[] clusterList = new List<int>[clusterCount];
 
                 for (int i = 0; i < clusterCount; i++)
                 {
-                    clusterList[i] = new List<int>();
+                    layPart.Add(new List<int>());
                 }
 
                 foreach (int vId in layers[l])
                 {
                     int clInd = uf.FindRootIndex(vId);
-                    clusterList[clInd].Add(vId);
-                }
-
-                // All connected components are now in clusterList.
-                // Transform in output format.
-
-                layPart[l] = new int[clusterList.Length][];
-
-                for (int i = 0; i < clusterList.Length; i++)
-                {
-                    layPart[l][i] = clusterList[i].ToArray();
+                    layPart[startInd + clInd].Add(vId);
                 }
             }
 
             // Add lowest layer (i.e. start vertex).
-            layPart[0] = new int[][] { new int[] { startId } };
+            List<int> sCluster = new List<int>();
+            sCluster.Add(startId);
+            layPart.Add(sCluster);
 
-            return layPart;
+
+            // Sort vertices in clusters.
+            foreach (List<int> cluster in layPart)
+            {
+                cluster.Sort();
+            }
+
+            // Sort clusters
+            layPart.Sort(new ClusterSorter());
+
+            int[][] result = new int[layPart.Count][];
+
+            for (int i = 0; i < layPart.Count; i++)
+            {
+                result[i] = layPart[i].ToArray();
+            }
+
+            return result;
+        }
+
+        private class ClusterSorter : IComparer<List<int>>
+        {
+            int IComparer<List<int>>.Compare(List<int> x, List<int> y)
+            {
+                return x[0].CompareTo(y[0]);
+            }
         }
     }
 }
