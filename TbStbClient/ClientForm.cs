@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Windows.Forms;
 
 namespace TbStb.Client
 {
     public partial class ClientForm : Form
     {
+        CryptoClient client;
+
         private bool logActive = true;
         private delegate void LogDelegate(string text);
 
@@ -33,5 +36,37 @@ namespace TbStb.Client
         {
             logActive = false;
         }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            if (client != null)
+            {
+                client.Close();
+            }
+
+            client = new CryptoClient();
+            client.MessageReceived += Socket_MessageReceived;
+            client.ConnectionEnded += Socket_ConnectionEnded;
+
+            bool connected = client.Connect(new IPEndPoint(IPAddress.Parse(txtIP.Text), 4242));
+            if (connected)
+            {
+                Log("Connected to server.");
+            }
+            else
+            {
+                Log("Could not connect to server.");
+            }
+        }
+
+        private void Socket_MessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+        }
+
+        private void Socket_ConnectionEnded(object sender, EventArgs e)
+        {
+            Log("Server Disconnected.");
+        }
+
     }
 }

@@ -42,6 +42,7 @@
             this.txtIP.Name = "txtIP";
             this.txtIP.Size = new System.Drawing.Size(333, 23);
             this.txtIP.TabIndex = 3;
+            this.txtIP.Text = "127.0.0.1";
             // 
             // btnConnect
             // 
@@ -52,6 +53,7 @@
             this.btnConnect.TabIndex = 2;
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
             // lstLog
             // 
