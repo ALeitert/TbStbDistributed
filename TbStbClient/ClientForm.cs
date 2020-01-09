@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
@@ -13,11 +14,17 @@ namespace TbStb.Client
         private bool logActive = true;
         private delegate void LogDelegate(string text);
 
+        private BackgroundWorker bgw;
         private delegate void ProcessMessageDelegate(string msg);
 
         public ClientForm()
         {
             InitializeComponent();
+
+            bgw = new BackgroundWorker();
+            bgw.DoWork += bgw_DoWork;
+            bgw.RunWorkerCompleted += bgw_RunWorkerCompleted;
+            bgw.WorkerSupportsCancellation = true;
         }
 
         private void Log(string text)
@@ -85,5 +92,14 @@ namespace TbStb.Client
             throw new NotImplementedException();
         }
 
+        private void bgw_DoWork(object sender, DoWorkEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void bgw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
