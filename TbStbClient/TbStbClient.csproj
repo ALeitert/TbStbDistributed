@@ -58,6 +58,10 @@
     <Compile Include="ClientForm.Designer.cs">
       <DependentUpon>ClientForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Graph\Graph.BFS.cs" />
+    <Compile Include="Graph\Graph.cs" />
+    <Compile Include="Graph\Graph.LayeringPartition.cs" />
+    <Compile Include="Graph\UnionFind.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ClientForm.resx">
