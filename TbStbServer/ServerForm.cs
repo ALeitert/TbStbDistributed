@@ -10,9 +10,6 @@ namespace TbStb.Server
 {
     public partial class ServerForm : Form
     {
-        private Color DefaultItemBackColor = Color.White;
-        private Color ShadedItemBackColor = Color.FromArgb(228, 232, 237);
-
         private bool logActive = true;
         private delegate void LogDelegate(string text);
         private delegate void AddClientsDelegate(ClientBase[] clients);
@@ -31,6 +28,21 @@ namespace TbStb.Server
             pi.SetValue(ltvLog, true, new object[] { });
         }
 
+        private Color GetBackColor(int index)
+        {
+            Color oddColor = Color.White;
+            Color evenColor = Color.FromArgb(228, 232, 237);
+
+            if (index % 2 == 1)
+            {
+                return oddColor;
+            }
+            else
+            {
+                return evenColor;
+            }
+        }
+
         private void Log(string text)
         {
             if (!logActive) return;
@@ -42,10 +54,10 @@ namespace TbStb.Server
             else
             {
                 ListViewItem lvi = new ListViewItem();
+                lvi.BackColor = GetBackColor(ltvLog.Items.Count);
+
                 lvi.Text = DateTime.Now.ToString("HH:mm:ss");
                 lvi.SubItems.Add(text);
-
-                lvi.BackColor = ltvLog.Items.Count % 2 == 1 ? DefaultItemBackColor : ShadedItemBackColor;
 
                 ltvLog.Items.Add(lvi);
             }
@@ -181,7 +193,7 @@ namespace TbStb.Server
                 string name = Dns.GetHostEntry(address).HostName;
 
                 ListViewItem lvi = new ListViewItem();
-                lvi.BackColor = ltvClients.Items.Count % 2 == 1 ? DefaultItemBackColor : ShadedItemBackColor;
+                lvi.BackColor = GetBackColor(ltvClients.Items.Count);
 
                 lvi.Text = address.ToString();
                 lvi.SubItems.AddRange(new string[]
