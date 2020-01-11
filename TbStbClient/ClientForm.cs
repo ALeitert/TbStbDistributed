@@ -47,6 +47,21 @@ namespace TbStb.Client
             }
         }
 
+        private void LogAppend(string text)
+        {
+            if (!logActive) return;
+
+            if (lstLog.InvokeRequired)
+            {
+                lstLog.Invoke(new LogDelegate(LogAppend), new object[] { text });
+            }
+            else
+            {
+                string lastItem = (string)lstLog.Items[lstLog.Items.Count - 1];
+                lstLog.Items[lstLog.Items.Count - 1] = lastItem + text;
+            }
+        }
+
         private void ClientForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             logActive = false;
@@ -54,6 +69,8 @@ namespace TbStb.Client
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
+            Log("Connecting to server ... ");
+
             if (client != null)
             {
                 client.Close();
@@ -66,11 +83,11 @@ namespace TbStb.Client
             bool connected = client.Connect(new IPEndPoint(IPAddress.Parse(txtIP.Text), 4242));
             if (connected)
             {
-                Log("Connected to server.");
+                LogAppend("Done.");
             }
             else
             {
-                Log("Could not connect to server.");
+                LogAppend("Failed.");
             }
         }
 
@@ -159,6 +176,9 @@ namespace TbStb.Client
                 return;
             }
 
+            Log("Loading graph \"" + name + "\"");
+            int startTime = Environment.TickCount;
+
             if (partnerProcess != null && !partnerProcess.HasExited)
             {
                 partnerProcess.Kill();
@@ -170,6 +190,8 @@ namespace TbStb.Client
                 g = new Graph(fs);
                 g.Name = name;
             }
+
+            LogAppend(string.Format(" ({0:#,##0} ms)", Environment.TickCount - startTime));
         }
 
         private class Base64Reader
@@ -191,7 +213,7 @@ namespace TbStb.Client
 
                 // Create new buffer to ensure the internal array is not larger than needed.
                 List<byte> newBuffer = new List<byte>();
-                
+
                 for (int i = buffPtr; i < buffer.Count; i++)
                 {
                     newBuffer.Add(buffer[i]);
@@ -250,9 +272,14 @@ namespace TbStb.Client
                 psi.RedirectStandardOutput = true;
                 psi.UseShellExecute = false;
 
+                Log("Starting " + psi.FileName + ".");
+
                 partnerProcess = Process.Start(psi);
                 g.Print(partnerProcess.StandardInput);
             }
+
+            Log(string.Format("Computing potential partners with vId = {0} and rho = {1} ... ", vId, rho));
+            int startTime = Environment.TickCount;
 
             partnerProcess.StandardInput.WriteLine(string.Format("{0} {1}", vId, rho));
             Base64Reader reader = new Base64Reader(partnerProcess.StandardOutput);
@@ -278,6 +305,8 @@ namespace TbStb.Client
 
             byte[] data = reader.GetBuffer();
             reader = null;
+
+            LogAppend(string.Format("Done ({0:#,##0} ms).", Environment.TickCount - startTime));
 
             throw new NotImplementedException();
         }
