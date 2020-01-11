@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace TbStb.Client
+namespace TbStb
 {
     partial class Graph
     {

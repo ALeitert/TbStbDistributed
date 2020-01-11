@@ -17,6 +17,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Network", "Network", "{CFCC
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PotentialPartners", "PotentialPartners\PotentialPartners.vcxproj", "{9B87D3DF-5132-4D1C-8934-7423EDCE1CB1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graphs", "Graphs", "{02F9BED3-7C54-4E69-9A3B-87D7BF57601E}"
+	ProjectSection(SolutionItems) = preProject
+		Graph\Graph.BFS.cs = Graph\Graph.BFS.cs
+		Graph\Graph.cs = Graph\Graph.cs
+		Graph\Graph.LayeringPartition.cs = Graph\Graph.LayeringPartition.cs
+		Graph\UnionFind.cs = Graph\UnionFind.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

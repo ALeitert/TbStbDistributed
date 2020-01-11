@@ -46,6 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Graph\Graph.BFS.cs">
+      <Link>Graph\Graph.BFS.cs</Link>
+    </Compile>
+    <Compile Include="..\Graph\Graph.cs">
+      <Link>Graph\Graph.cs</Link>
+    </Compile>
+    <Compile Include="..\Graph\Graph.LayeringPartition.cs">
+      <Link>Graph\Graph.LayeringPartition.cs</Link>
+    </Compile>
+    <Compile Include="..\Graph\UnionFind.cs">
+      <Link>Graph\UnionFind.cs</Link>
+    </Compile>
     <Compile Include="..\Network\ClientBase.cs">
       <Link>Network\ClientBase.cs</Link>
     </Compile>

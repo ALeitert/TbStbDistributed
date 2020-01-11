@@ -1,4 +1,4 @@
-﻿namespace TbStb.Client
+﻿namespace TbStb
 {
     public struct BfsResult
     {

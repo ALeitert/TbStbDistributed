@@ -46,6 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Graph\Graph.BFS.cs">
+      <Link>Graph\Graph.BFS.cs</Link>
+    </Compile>
+    <Compile Include="..\Graph\Graph.cs">
+      <Link>Graph\Graph.cs</Link>
+    </Compile>
+    <Compile Include="..\Graph\Graph.LayeringPartition.cs">
+      <Link>Graph\Graph.LayeringPartition.cs</Link>
+    </Compile>
+    <Compile Include="..\Graph\UnionFind.cs">
+      <Link>Graph\UnionFind.cs</Link>
+    </Compile>
     <Compile Include="..\Network\ClientBase.cs">
       <Link>Network\ClientBase.cs</Link>
     </Compile>
@@ -58,10 +70,6 @@
     <Compile Include="ClientForm.Designer.cs">
       <DependentUpon>ClientForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graph\Graph.BFS.cs" />
-    <Compile Include="Graph\Graph.cs" />
-    <Compile Include="Graph\Graph.LayeringPartition.cs" />
-    <Compile Include="Graph\UnionFind.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ClientForm.resx">

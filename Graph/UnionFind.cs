@@ -1,5 +1,5 @@
 ﻿
-namespace TbStb.Client
+namespace TbStb
 {
     class UnionFind
     {
