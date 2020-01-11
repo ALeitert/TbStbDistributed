@@ -16,6 +16,7 @@ namespace TbStb.Server
         private bool logActive = true;
         private delegate void LogDelegate(string text);
         private delegate void AddClientsDelegate(ClientBase[] clients);
+        private delegate void CloseClientDelegate(int clientId);
 
         private CryptoServer server;
         private List<ClientBase> clientList = new List<ClientBase>();
@@ -152,6 +153,7 @@ namespace TbStb.Server
 
         private void Server_ClientDisconnected(object sender, ClientDisconnectedEventArgs e)
         {
+            CloseClient(e.ClientId);
         }
 
         private void Server_ListenerClosed(object sender, EventArgs e)
@@ -195,5 +197,24 @@ namespace TbStb.Server
             ltvClients.ResumeLayout();
         }
 
+        private void CloseClient(int clientId)
+        {
+            if (!logActive) return;
+
+            if (ltvClients.InvokeRequired)
+            {
+                ltvClients.Invoke(new CloseClientDelegate(CloseClient), new object[] { clientId });
+                return;
+            }
+
+
+            clientList[clientId] = null;
+
+            ListViewItem lvi = ltvClients.Items[clientId];
+            lvi.ForeColor = Color.Gray;
+            lvi.SubItems[1].Text = "disconnected";
+
+            Log("Client disconnected (" + lvi.Text + ").");
+        }
     }
 }
