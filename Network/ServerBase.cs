@@ -104,7 +104,7 @@ namespace TbStb
             clientTable.Remove(client);
             clientFromId.Remove(clientId);
 
-            ClientDisconnected?.Invoke(this, new ClientDisconnectedEventArgs(clientCounter));
+            ClientDisconnected?.Invoke(this, new ClientDisconnectedEventArgs(client, clientCounter));
         }
 
         private void Client_MessageReceived(object sender, MessageReceivedEventArgs e)
@@ -112,7 +112,7 @@ namespace TbStb
             ClientBase client = (ClientBase)sender;
             int clientId = clientTable[client];
 
-            MessageFromClientEventArgs args = new MessageFromClientEventArgs(e.RawMessage, clientId);
+            MessageFromClientEventArgs args = new MessageFromClientEventArgs(e.RawMessage, client, clientId);
 
             MessageFromClient?.Invoke(this, args);
         }
@@ -136,10 +136,12 @@ namespace TbStb
 
     public class ClientDisconnectedEventArgs : EventArgs
     {
+        public ClientBase Client { get; protected set; }
         public int ClientId { get; protected set; }
 
-        public ClientDisconnectedEventArgs(int clientId)
+        public ClientDisconnectedEventArgs(ClientBase client, int clientId)
         {
+            Client = client;
             ClientId = clientId;
         }
     }
@@ -147,11 +149,13 @@ namespace TbStb
     public class MessageFromClientEventArgs : EventArgs
     {
         public byte[] RawMessage { get; protected set; }
+        public ClientBase Client { get; protected set; }
         public int ClientId { get; protected set; }
 
-        public MessageFromClientEventArgs(byte[] message, int clientId)
+        public MessageFromClientEventArgs(byte[] message, ClientBase client, int clientId)
         {
             RawMessage = message;
+            Client = client;
             ClientId = clientId;
         }
     }
