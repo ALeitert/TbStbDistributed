@@ -83,6 +83,7 @@ namespace TbStb.Client
             if (connected)
             {
                 LogAppend("Done.");
+                btnConnect.Enabled = false;
             }
             else
             {
@@ -99,6 +100,7 @@ namespace TbStb.Client
         private void Socket_ConnectionEnded(object sender, EventArgs e)
         {
             Log("Server Disconnected.");
+            btnConnect.Enabled = true;
         }
 
         private void ProcessMessage(string msg)
@@ -180,6 +182,7 @@ namespace TbStb.Client
             sizePt2 = null;
             answerPt1 = null;
             answerPt2 = null;
+            result = null;
             GC.Collect();
 
             Log(string.Format("Sending message to server ({0:#,##0} bytes).", fullAnswerSize));
