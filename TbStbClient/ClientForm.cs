@@ -231,6 +231,25 @@ namespace TbStb.Client
                 g.Print(partnerProcess.StandardInput);
             }
 
+            partnerProcess.StandardInput.WriteLine(string.Format("{0} {1}", vId, rho));
+            Base64Reader reader = new Base64Reader(partnerProcess.StandardOutput);
+
+            bool isValid = true;
+            int ccs = reader.ReadInt32();
+
+            for (int i = 0; i < ccs; i++)
+            {
+                int partners = reader.ReadInt32();
+                isValid = isValid && partners > 0;
+
+                for (int j = 0; j < partners; j++)
+                {
+                    int id = reader.ReadInt32();
+                }
+            }
+
+            byte[] data = reader.GetBuffer();
+
             throw new NotImplementedException();
         }
 
