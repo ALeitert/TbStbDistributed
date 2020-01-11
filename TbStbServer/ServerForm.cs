@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
 using System.Net.Sockets;
@@ -14,8 +15,10 @@ namespace TbStb.Server
 
         private bool logActive = true;
         private delegate void LogDelegate(string text);
+        private delegate void AddClientsDelegate(ClientBase[] clients);
 
         private CryptoServer server;
+        private List<ClientBase> clientList = new List<ClientBase>();
 
         public ServerForm()
         {
@@ -128,6 +131,19 @@ namespace TbStb.Server
 
         private void Server_ClientConnected(object sender, ClientConnectedEventArgs e)
         {
+            IPEndPoint ep = (IPEndPoint)e.Client.Socket.RemoteEndPoint;
+            Log("Client connected (" + ep.Address.ToString() + ")");
+
+
+            // Add client (and potentially missing ones) to list.
+            ClientBase[] missingClients = new ClientBase[e.ClientId - clientList.Count + 1];
+
+            for (int i = 0; i < missingClients.Length; i++)
+            {
+                missingClients[i] = server[i + clientList.Count];
+            }
+
+            AddClients(missingClients);
         }
 
         private void Server_MessageFromClient(object sender, MessageFromClientEventArgs e)
@@ -141,6 +157,42 @@ namespace TbStb.Server
         private void Server_ListenerClosed(object sender, EventArgs e)
         {
             Log("Listener closed.");
+        }
+
+        private void AddClients(ClientBase[] clients)
+        {
+            if (!logActive) return;
+
+            if (ltvClients.InvokeRequired)
+            {
+                ltvClients.Invoke(new AddClientsDelegate(AddClients), new object[] { clients });
+                return;
+            }
+
+            ltvClients.SuspendLayout();
+
+            for (int i = 0; i < clients.Length; i++)
+            {
+                ClientBase client = clients[i];
+                IPEndPoint ipe = (IPEndPoint)client.Socket.RemoteEndPoint;
+                IPAddress address = ipe.Address;
+                string name = Dns.GetHostEntry(address).HostName;
+
+                ListViewItem lvi = new ListViewItem();
+                lvi.BackColor = ltvClients.Items.Count % 2 == 1 ? DefaultItemBackColor : ShadedItemBackColor;
+
+                lvi.Text = address.ToString();
+                lvi.SubItems.AddRange(new string[]
+                {
+                    string.Empty,
+                    name
+                });
+
+                ltvClients.Items.Add(lvi);
+                clientList.Add(client);
+            }
+
+            ltvClients.ResumeLayout();
         }
 
     }
