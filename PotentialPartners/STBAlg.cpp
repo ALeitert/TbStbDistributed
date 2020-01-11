@@ -2,10 +2,15 @@
 // Created by Holly Strauch on 10/16/2019.
 //
 
+#include <algorithm>
+#include <unordered_map>
+
+#include "Base64Writer.h"
 #include "STBAlg.h"
 
 using namespace std;
 using h_set = std::unordered_set<int>;
+using h_map = std::unordered_map<int, int>;
 
 int STBAlg::findRho(Graph& graph)
 {
@@ -48,6 +53,150 @@ bool STBAlg::runAlg(Graph& graph, int rho)
     delete[] dependents;
 
     return success;
+}
+
+void STBAlg::findPotPart(Graph& graph, int uId, int rho, ostream& out)
+{
+    // Vertex v (vId) is a potential partner of u (scope[0]) for some C in C[u] if
+    //   (i) N^rho[v] contains N(C) (ccNeighbors) and
+    //  (ii) N^rho[v] intersects C
+
+    // Instaed of checking each vertex v in distance 2 rho to u,
+    // we run a BFS with radius rho on each vertex that is in N(C) for some C.
+    // A vertex v is then a potential partner if
+    //  (1)   (i) v is in C and
+    //       (ii) the max distance from v to a vertex in N(C) is at most rho; or
+    //
+    //  (2)   (i) v is not in C,
+    //       (ii) the max distance from v to a vertex in N(C) is at most rho, and
+    //      (iii) the min distance from v to a vertex in N(C) is strictly smaller than rho.
+
+    // To determine if the max distance of a vertex v is at most rho to N(C), we count
+    // for how many vertices n of N(C), v is in N^rho[n].
+
+
+    // Find all reachable vertices. Set partition of all vertices  with distance at most rho
+    // to u and all not reachable vertics to 0. Set partition of all other vertices to -1.
+    // This ensures that non-reachable vertices are handled properly.
+
+    int* partition = new int[graph.getVerts()];
+    for (int i = 0; i < graph.getVerts(); i++)
+    {
+        partition[i] = 0;
+    }
+
+    vector<int>* allVert = graph.bfs(uId);
+    vector<int> uNeigh[2];
+
+    for (int i = 0; i < allVert[0].size() && allVert[1][i] <= rho; i++)
+    {
+        uNeigh[0].push_back(allVert[0][i]);
+        uNeigh[1].push_back(allVert[1][i]);
+    }
+
+    for (int i = uNeigh[0].size(); i < allVert[0].size(); i++)
+    {
+        int vId = allVert[0][i];
+        partition[vId] = -1;
+    }
+
+    delete[] allVert;
+
+    int numCC = graph.findConnComp(partition, graph.getVerts());
+    h_set* ccNeighbors = findCNeigh(numCC, partition, graph, uNeigh, rho);
+
+    bool isValid = true;
+    Base64Writer writer(out);
+
+    writer.write(numCC - 1);
+
+    for (int cc = 0; cc < numCC - 1; cc++)
+    {
+        if (!isValid)
+        {
+            writer.write(0);
+            continue;
+        }
+
+        h_map maxDisCtr;
+        h_map minDis;
+
+        for (const int nId : ccNeighbors[cc])
+        {
+            // nId is a vertex in the neighbourhood of C.
+
+            vector<int>* nNeigh = graph.limitedBFS(nId, rho);
+
+            for (size_t i = 0; i < nNeigh[0].size(); i++)
+            {
+                int vId = nNeigh[0][i];
+                int vDis = nNeigh[1][i];
+
+                if (maxDisCtr.count(vId) == 0)
+                {
+                    maxDisCtr[vId] = 0;
+                    minDis[vId] = rho + 1;
+                }
+
+                maxDisCtr[vId]++;
+                minDis[vId] = min(minDis[vId], vDis);
+            }
+
+            delete[] nNeigh;
+        }
+
+        vector<int> potPartners;
+
+        // Iterate over all found vertices.
+        for (const auto& kvPair : maxDisCtr)
+        {
+            int vId = kvPair.first;
+            int vDis = minDis[vId];
+            size_t disCtr = kvPair.second;
+            int CC = partition[vId] - 1;
+
+            if (disCtr < ccNeighbors[cc].size())
+            {
+                // The max distance from v to N(C) is larger than rho.
+                // Violation of condition (ii).
+                continue;
+            }
+
+            if (CC == cc)
+            {
+                // Case (1): v is in C.
+            }
+            else
+            {
+                // Case (2): v is not in C.
+
+                if (vDis >= rho)
+                {
+                    // The distance from v to N(C) is larger than or equal to rho.
+                    // Violation of condition (iii).
+                    continue;
+                }
+            }
+
+            // All coditions satisfied. v is a potential partner.
+            potPartners.push_back(vId);
+        }
+
+        isValid = potPartners.size() > 0;
+
+        // Output potential partners.
+        writer.write(potPartners.size());
+
+        for (size_t i = 0; i < potPartners.size(); i++)
+        {
+            writer.write(potPartners[i]);
+        }
+    }
+
+    delete[] partition;
+    delete[] ccNeighbors;
+
+    writer.flush();
 }
 
 PotPart* STBAlg::findPotPart(Graph& graph, int uId, int rho)
@@ -206,7 +355,7 @@ PotPart* STBAlg::uPartners(int* partition, Graph& graph, h_set* ccNeighbors, vec
         // Vertex v (vId) is apotential partner of u (scope[0]) for some C in C[u] if
         //   (i) N^rho[v] contains N(C) (ccNeighbors) and
         //  (ii) N^rho[v] intersects C
-        
+
         vector<int>* vVect = graph.limitedBFS(vId, rho);
         h_set vNeigh;
 

@@ -23,10 +23,7 @@ int main()
             break;
         }
 
-        PotPart* potPar = algo.findPotPart(g, uId, rho);
-        potPar->printBase64(cout);
-
-        delete potPar;
+        algo.findPotPart(g, uId, rho, cout);
     }
 
 #ifdef _DEBUG

@@ -19,6 +19,7 @@ class STBAlg
 public:
     int findRho(Graph& graph);
     bool runAlg(Graph& graph, int rho);
+    void findPotPart(Graph& graph, int uId, int rho, ostream& out);
     PotPart* findPotPart(Graph& graph, int u, int rho);
 
 private:
