@@ -216,6 +216,21 @@ namespace TbStb.Client
         /// </returns>
         private byte[] FindPotentialPartners(string graph, int vId, int rho)
         {
+            LoadGraph(graph);
+
+            if (partnerProcess == null)
+            {
+                ProcessStartInfo psi = new ProcessStartInfo();
+                psi.CreateNoWindow = true;
+                psi.FileName = "PotentialPartners.exe";
+                psi.RedirectStandardInput = true;
+                psi.RedirectStandardOutput = true;
+                psi.UseShellExecute = false;
+
+                partnerProcess = Process.Start(psi);
+                g.Print(partnerProcess.StandardInput);
+            }
+
             throw new NotImplementedException();
         }
 
