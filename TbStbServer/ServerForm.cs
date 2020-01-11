@@ -21,6 +21,7 @@ namespace TbStb.Server
         private List<ClientBase> clientList = new List<ClientBase>();
 
         Graph g = null;
+        const string graphDir = @".\graphs";
         BackgroundWorker graphLoader;
 
         public ServerForm()
@@ -245,8 +246,8 @@ namespace TbStb.Server
 
         private void UpdateGraphList()
         {
-            string graphPath = @"C:\Users\Snofru\Documents\graphs";
-            if (!Directory.Exists(graphPath)) return;
+            string fullDir = Path.GetFullPath(graphDir);
+            if (!Directory.Exists(fullDir)) return;
 
 
             // Keep all previous entries.
@@ -257,7 +258,7 @@ namespace TbStb.Server
             ltvGraphs.Items.Clear();
 
             // Load graphs.
-            string[] allFiles = Directory.GetFiles(graphPath);
+            string[] allFiles = Directory.GetFiles(fullDir);
 
             for (int i = 0, j = 0; i < allFiles.Length; i++)
             {
