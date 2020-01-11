@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Net;
@@ -19,6 +20,9 @@ namespace TbStb.Server
         private CryptoServer server;
         private List<ClientBase> clientList = new List<ClientBase>();
 
+        Graph g = null;
+        BackgroundWorker graphLoader;
+
         public ServerForm()
         {
             InitializeComponent();
@@ -27,6 +31,10 @@ namespace TbStb.Server
             pi.SetValue(ltvGraphs, true, new object[] { });
             pi.SetValue(ltvClients, true, new object[] { });
             pi.SetValue(ltvLog, true, new object[] { });
+
+            graphLoader = new BackgroundWorker();
+            graphLoader.DoWork += graphLoader_DoWork;
+            graphLoader.RunWorkerCompleted += graphLoader_RunWorkerCompleted;
         }
 
         private Color GetBackColor(int index)
@@ -292,5 +300,14 @@ namespace TbStb.Server
 
             ltvGraphs.ResumeLayout();
         }
+
+        private void graphLoader_DoWork(object sender, DoWorkEventArgs e)
+        {
+        }
+
+        private void graphLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+        }
+
     }
 }
