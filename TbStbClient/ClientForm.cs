@@ -299,12 +299,16 @@ namespace TbStb.Client
                 }
             }
 
-            byte[] data = reader.GetBuffer();
-            reader = null;
-
             LogAppend(string.Format("Done ({0:#,##0} ms).", Environment.TickCount - startTime));
 
-            throw new NotImplementedException();
+            if (isValid)
+            {
+                return reader.GetBuffer();
+            }
+            else
+            {
+                return new byte[0];
+            }
         }
 
         /// <summary>
