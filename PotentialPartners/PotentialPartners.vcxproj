@@ -19,12 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Base64Writer.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PotPart.cpp" />
     <ClCompile Include="STBAlg.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Base64Writer.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="PotPart.h" />
     <ClInclude Include="STBAlg.h" />

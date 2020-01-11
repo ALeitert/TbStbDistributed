@@ -24,7 +24,7 @@ int main()
         }
 
         PotPart* potPar = algo.findPotPart(g, uId, rho);
-        potPar->printBinary(cout);
+        potPar->printBase64(cout);
 
         delete potPar;
     }

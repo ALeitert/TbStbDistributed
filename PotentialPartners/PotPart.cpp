@@ -2,6 +2,7 @@
 // Created by Holly Strauch on 12/5/2019.
 //
 
+#include "Base64Writer.h"
 #include "PotPart.h"
 
 PotPart::PotPart()
@@ -95,12 +96,12 @@ void PotPart::print(ostream& out)
 
 void writeInt(ostream& out, int num)
 {
-    char buffer[4];
+    unsigned char buffer[4];
     for (int i = 0; i < 4; i++)
     {
-        buffer[i] = (num >> (i * 8));
+        buffer[i] = (num >> (i * 8)) & 255;
     }
-    out.write(buffer, 4);
+    out.write((char*)buffer, 4);
 }
 
 void PotPart::printBinary(ostream& out)
@@ -118,4 +119,23 @@ void PotPart::printBinary(ostream& out)
     }
 
     out.flush();
+}
+
+void PotPart::printBase64(ostream& out)
+{
+    Base64Writer writer(out);
+
+    writer.write(this->numCC);
+
+    for (int i = 0; i < this->numCC; i++)
+    {
+        writer.write(nC[i].size());
+
+        for (const int part : nC[i])
+        {
+            writer.write(part);
+        }
+    }
+
+    writer.flush();
 }

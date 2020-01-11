@@ -28,6 +28,7 @@ public:
 
     void print(ostream& out);
     void printBinary(ostream& out);
+    void printBase64(ostream& out);
 
 private:
     int numCC;
