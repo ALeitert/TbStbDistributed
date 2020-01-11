@@ -52,30 +52,55 @@ bool STBAlg::runAlg(Graph& graph, int rho)
 
 PotPart* STBAlg::findPotPart(Graph& graph, int uId, int rho)
 {
-    vector<int>* scope = graph.limitedBFS(uId, 2 * rho);
-    int* partition = init_partition(graph.getVerts());
+    // Find all reachable vertices. Set partition of all vertices with distance at most rho
+    // to u and all not reachable vertics to 0. Set partition of all other vertices to -1.
+    // This ensures that non-reachable vertices are handled properly.
 
-    // Find neighbours up to distance rho.
-    vector<int> uNeigh[2];
-    for (int i = 0; scope[1][i] <= rho; i++)
+    int* partition = new int[graph.getVerts()];
+    for (int i = 0; i < graph.getVerts(); i++)
     {
-        int vId = scope[0][i];
-        int vDis = scope[1][i];
+        partition[i] = 0;
+    }
+
+    vector<int>* allVert = graph.bfs(uId);
+
+    vector<int> uNeigh[2];
+    vector<int> scope;
+
+    for (int i = 0; i < allVert[0].size() && allVert[1][i] <= rho; i++)
+    {
+        int vId = allVert[0][i];
+        int vDis = allVert[1][i];
 
         uNeigh[0].push_back(vId);
         uNeigh[1].push_back(vDis);
 
-        partition[vId] = 0;
+        scope.push_back(vId);
     }
+
+    for (int i = uNeigh[0].size(); i < allVert[0].size(); i++)
+    {
+        int vId = allVert[0][i];
+        int vDis = allVert[1][i];
+
+        partition[vId] = -1;
+
+        if (vDis <= 2 * rho)
+        {
+            scope.push_back(vId);
+        }
+    }
+
+    delete[] allVert;
+
 
     int numCC = graph.findConnComp(partition, graph.getVerts());
     h_set* ccNeighbors = findCNeigh(numCC, partition, graph, uNeigh, rho);
 
-    PotPart* partners = uPartners(partition, graph, ccNeighbors, scope[0], rho, numCC);
+    PotPart* partners = uPartners(partition, graph, ccNeighbors, scope, rho, numCC);
 
     delete[] partition;
     delete[] ccNeighbors;
-    delete[] scope;
 
     return partners;
 }
