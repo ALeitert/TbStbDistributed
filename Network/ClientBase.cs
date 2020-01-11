@@ -49,6 +49,14 @@ namespace TbStb
             }
         }
 
+        public Socket Socket
+        {
+            get
+            {
+                return socket;
+            }
+        }
+
         protected bool StillConnected
         {
             get

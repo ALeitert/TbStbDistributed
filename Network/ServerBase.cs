@@ -10,7 +10,7 @@ namespace TbStb
     {
         private Socket listenerSocket;
 
-        int clientCounter = 0;
+        int clientCounter = -1;
 
         private Dictionary<ClientBase, int> clientTable;
         private Dictionary<int, ClientBase> clientFromId;
@@ -25,6 +25,14 @@ namespace TbStb
             listenerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             clientTable = new Dictionary<ClientBase, int>();
             clientFromId = new Dictionary<int, ClientBase>();
+        }
+
+        public ClientBase this[int clientId]
+        {
+            get
+            {
+                return clientFromId[clientId];
+            }
         }
 
         public void Start(IPEndPoint ipe)
@@ -73,7 +81,7 @@ namespace TbStb
                     client.MessageReceived += Client_MessageReceived;
                     client.ConnectionEnded += Client_ConnectionEnded;
 
-                    ClientConnected?.Invoke(this, new ClientConnectedEventArgs(clientCounter));
+                    ClientConnected?.Invoke(this, new ClientConnectedEventArgs(client, clientCounter));
                 }
                 catch (SocketException)
                 {
@@ -116,10 +124,12 @@ namespace TbStb
 
     public class ClientConnectedEventArgs : EventArgs
     {
+        public ClientBase Client { get; protected set; }
         public int ClientId { get; protected set; }
 
-        public ClientConnectedEventArgs(int clientId)
+        public ClientConnectedEventArgs(ClientBase client, int clientId)
         {
+            Client = client;
             ClientId = clientId;
         }
     }
