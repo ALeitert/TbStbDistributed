@@ -172,6 +172,42 @@ namespace TbStb.Client
             }
         }
 
+        private class Base64Reader
+        {
+            private StreamReader reader = null;
+            private List<byte> buffer = new List<byte>();
+
+            private int buffPtr = 0;
+
+            public Base64Reader(StreamReader sr)
+            {
+                reader = sr;
+            }
+
+            public int ReadInt32()
+            {
+                if (buffPtr >= buffer.Count)
+                {
+                    string line = reader.ReadLine();
+                    buffer.AddRange(Convert.FromBase64String(line));
+                }
+
+                byte[] data = new byte[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    data[i] = buffer[buffPtr];
+                    buffPtr++;
+                }
+
+                return BitConverter.ToInt32(data, 0);
+            }
+
+            public byte[] GetBuffer()
+            {
+                return buffer.ToArray();
+            }
+        }
+
         /// <summary>
         /// Calls the PotentialPartner program to compute the potential partners of the given vertex.
         /// </summary>
