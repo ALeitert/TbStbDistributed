@@ -186,17 +186,11 @@ namespace TbStb
 
         public void Close()
         {
-            bool wasConnected = IsConnected;
+            if (socket == null) return;
 
-            if (socket != null)
-            {
-                socket.Close();
-            }
-
-            if (wasConnected)
-            {
-                ConnectionEnded?.Invoke(this, new EventArgs());
-            }
+            socket.Close();
+            ConnectionEnded?.Invoke(this, new EventArgs());
+            socket = null;
         }
 
     }
