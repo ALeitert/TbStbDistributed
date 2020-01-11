@@ -74,19 +74,36 @@ void STBAlg::findPotPart(Graph& graph, int uId, int rho, ostream& out)
     // To determine if the max distance of a vertex v is at most rho to N(C), we count
     // for how many vertices n of N(C), v is in N^rho[n].
 
-    vector<int>* uNeigh = graph.limitedBFS(uId, rho);
 
-    int* partition = init_partition(graph.getVerts());
-    for (size_t i = 0; i < uNeigh[0].size(); i++)
+    // Find all reachable vertices. Set partition of all vertices  with distance at most rho
+    // to u and all not reachable vertics to 0. Set partition of all other vertices to -1.
+    // This ensures that non-reachable vertices are handled properly.
+
+    int* partition = new int[graph.getVerts()];
+    for (int i = 0; i < graph.getVerts(); i++)
     {
-        int vId = uNeigh[0][i];
-        partition[vId] = 0;
+        partition[i] = 0;
     }
+
+    vector<int>* allVert = graph.bfs(uId);
+    vector<int> uNeigh[2];
+
+    for (int i = 0; i < allVert[0].size() && allVert[1][i] <= rho; i++)
+    {
+        uNeigh[0].push_back(allVert[0][i]);
+        uNeigh[1].push_back(allVert[1][i]);
+    }
+
+    for (int i = uNeigh[0].size(); i < allVert[0].size(); i++)
+    {
+        int vId = allVert[0][i];
+        partition[vId] = -1;
+    }
+
+    delete[] allVert;
 
     int numCC = graph.findConnComp(partition, graph.getVerts());
     h_set* ccNeighbors = findCNeigh(numCC, partition, graph, uNeigh, rho);
-
-    delete[] uNeigh;
 
     bool isValid = true;
     Base64Writer writer(out);
