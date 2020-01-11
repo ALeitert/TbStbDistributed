@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
@@ -76,6 +77,11 @@ namespace TbStb.Server
                 ListViewItem lastItem = ltvLog.Items[ltvLog.Items.Count - 1];
                 lastItem.SubItems[1].Text += text;
             }
+        }
+
+        private void ServerForm_Load(object sender, EventArgs e)
+        {
+            UpdateGraphList();
         }
 
         private void ServerForm_Shown(object sender, EventArgs e)
@@ -227,6 +233,64 @@ namespace TbStb.Server
             lvi.SubItems[1].Text = "disconnected";
 
             Log("Client disconnected (" + lvi.Text + ").");
+        }
+
+        private void UpdateGraphList()
+        {
+            string graphPath = @"C:\Users\Snofru\Documents\graphs";
+            if (!Directory.Exists(graphPath)) return;
+
+
+            // Keep all previous entries.
+            ListViewItem[] prevItems = new ListViewItem[ltvGraphs.Items.Count];
+            ltvGraphs.Items.CopyTo(prevItems, 0);
+
+            ltvGraphs.SuspendLayout();
+            ltvGraphs.Items.Clear();
+
+            // Load graphs.
+            string[] allFiles = Directory.GetFiles(graphPath);
+
+            for (int i = 0, j = 0; i < allFiles.Length; i++)
+            {
+                string fullPath = allFiles[i];
+                string name = Path.GetFileName(fullPath);
+
+                bool match = false;
+
+                for (; j < prevItems.Length; j++)
+                {
+                    int comp = prevItems[j].Text.CompareTo(name);
+
+                    if (comp < 0) continue;
+                    if (comp == 0) match = true;
+                    if (comp >= 0) break;
+                }
+
+                ListViewItem lvi = null;
+
+                if (match)
+                {
+                    lvi = prevItems[j];
+                }
+                else
+                {
+                    StreamReader sr = new StreamReader(fullPath);
+                    string firstLine = sr.ReadLine();
+                    sr.Dispose();
+
+                    int vSize = int.Parse(firstLine);
+
+                    lvi = new ListViewItem();
+                    lvi.Text = name;
+                    lvi.SubItems.Add(vSize.ToString("#,##0"));
+                }
+
+                lvi.BackColor = GetBackColor(ltvGraphs.Items.Count);
+                ltvGraphs.Items.Add(lvi);
+            }
+
+            ltvGraphs.ResumeLayout();
         }
     }
 }

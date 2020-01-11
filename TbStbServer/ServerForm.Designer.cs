@@ -216,6 +216,7 @@
             this.Name = "ServerForm";
             this.Text = "Tree-Breadth vs Strong Tree-Breadth (Server)";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ServerForm_FormClosing);
+            this.Load += new System.EventHandler(this.ServerForm_Load);
             this.Shown += new System.EventHandler(this.ServerForm_Shown);
             this.tabMain.ResumeLayout(false);
             this.tabGraphs.ResumeLayout(false);
