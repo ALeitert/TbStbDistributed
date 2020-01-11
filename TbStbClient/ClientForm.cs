@@ -178,16 +178,39 @@ namespace TbStb.Client
             private List<byte> buffer = new List<byte>();
 
             private int buffPtr = 0;
+            private bool bufferAll = true;
 
             public Base64Reader(StreamReader sr)
             {
                 reader = sr;
             }
 
+            public void StopBuffering()
+            {
+                bufferAll = false;
+
+                // Create new buffer to ensure the internal array is not larger than needed.
+                List<byte> newBuffer = new List<byte>();
+                
+                for (int i = buffPtr; i < buffer.Count; i++)
+                {
+                    newBuffer.Add(buffer[i]);
+                }
+
+                buffPtr = 0;
+                buffer = newBuffer;
+            }
+
             public int ReadInt32()
             {
                 if (buffPtr >= buffer.Count)
                 {
+                    if (!bufferAll)
+                    {
+                        buffer.Clear();
+                        buffPtr = 0;
+                    }
+
                     string line = reader.ReadLine();
                     buffer.AddRange(Convert.FromBase64String(line));
                 }
@@ -240,7 +263,12 @@ namespace TbStb.Client
             for (int i = 0; i < ccs; i++)
             {
                 int partners = reader.ReadInt32();
-                isValid = isValid && partners > 0;
+
+                if (isValid && partners == 0)
+                {
+                    isValid = false;
+                    reader.StopBuffering();
+                }
 
                 for (int j = 0; j < partners; j++)
                 {
@@ -249,6 +277,7 @@ namespace TbStb.Client
             }
 
             byte[] data = reader.GetBuffer();
+            reader = null;
 
             throw new NotImplementedException();
         }
