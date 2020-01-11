@@ -79,7 +79,7 @@
             this.Controls.Add(this.txtIP);
             this.Controls.Add(this.btnConnect);
             this.Name = "ClientForm";
-            this.Text = "Tree-Breadth vs Stron Tree-Breadth (Client)";
+            this.Text = "Tree-Breadth vs Strong Tree-Breadth (Client)";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ClientForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -64,6 +64,7 @@ namespace TbStb.Client
         private void ClientForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             logActive = false;
+            client.Close();
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -82,7 +83,7 @@ namespace TbStb.Client
             bool connected = client.Connect(new IPEndPoint(IPAddress.Parse(txtIP.Text), 4242));
             if (connected)
             {
-                LogAppend("Done.");
+                LogAppend("Success.");
                 btnConnect.Enabled = false;
             }
             else
