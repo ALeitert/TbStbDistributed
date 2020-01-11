@@ -53,5 +53,24 @@ namespace TbStb.Client
             }
         }
 
+        public void Print(StreamWriter writer)
+        {
+            writer.WriteLine(Vertices);
+
+            for (int vId = 0; vId < Vertices; vId++)
+            {
+                int deg = graph[vId].Length;
+                writer.Write(deg);
+
+                for (int i = 0; i < deg; i++)
+                {
+                    int uId = graph[vId][i];
+                    writer.Write(" " + uId.ToString());
+                }
+                writer.WriteLine();
+            }
+
+            writer.Flush();
+        }
     }
 }
