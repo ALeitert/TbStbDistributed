@@ -28,7 +28,6 @@ namespace TbStb.Client
 
             bgw = new BackgroundWorker();
             bgw.DoWork += bgw_DoWork;
-            bgw.RunWorkerCompleted += bgw_RunWorkerCompleted;
             bgw.WorkerSupportsCancellation = true;
         }
 
@@ -185,10 +184,6 @@ namespace TbStb.Client
 
             Log(string.Format("Sending message to server ({0:#,##0} bytes).", fullAnswerSize));
             client.SendMessage(fullAnswer);
-        }
-
-        private void bgw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
         }
 
         private void LoadGraph(string name)
