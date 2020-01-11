@@ -111,6 +111,12 @@ namespace TbStb.Client
                 return;
             }
 
+            // Give message to background worker.
+            bgw.RunWorkerAsync(msg);
+        }
+
+        private void bgw_DoWork(object sender, DoWorkEventArgs e)
+        {
             // Message format: "graphName|task|vId|rho"
             //   graphName: The graph to perform computations on.
             //        task: The task to do. Either "partner" to determine potential partners,
@@ -119,24 +125,14 @@ namespace TbStb.Client
             //         rho: The radius when checking potential partners. Not given for task "clDist".
 
 
+            string msg = (string)e.Argument;
             string[] msgParts = msg.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (msgParts == null || msgParts.Length < 3)
             {
                 Log("Invalid message from server: " + msg);
+                return;
             }
-            else
-            {
-                Log("Server: " + msg);
-            }
-
-            // Give message to background worker.
-            bgw.RunWorkerAsync(msgParts);
-        }
-
-        private void bgw_DoWork(object sender, DoWorkEventArgs e)
-        {
-            string[] msgParts = (string[])e.Argument;
 
             string graph = msgParts[0];
             string task = msgParts[1];
@@ -156,8 +152,8 @@ namespace TbStb.Client
                     break;
 
                 default:
-                    // Invalid message; do nothing.
-                    break;
+                    Log("Invalid message from server: " + msg);
+                    return;
             }
 
             e.Result = result;
