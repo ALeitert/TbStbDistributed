@@ -37,9 +37,24 @@ namespace TbStb.Server
                 lvi.Text = DateTime.Now.ToString("HH:mm:ss");
                 lvi.SubItems.Add(text);
 
-                lvi.BackColor = ltvLog.Items.Count % 2 == 0 ? DefaultItemBackColor : ShadedItemBackColor;
+                lvi.BackColor = ltvLog.Items.Count % 2 == 1 ? DefaultItemBackColor : ShadedItemBackColor;
 
                 ltvLog.Items.Add(lvi);
+            }
+        }
+
+        private void LogAppend(string text)
+        {
+            if (!logActive) return;
+
+            if (ltvLog.InvokeRequired)
+            {
+                ltvLog.Invoke(new LogDelegate(LogAppend), new object[] { text });
+            }
+            else
+            {
+                ListViewItem lastItem = ltvLog.Items[ltvLog.Items.Count - 1];
+                lastItem.SubItems[1].Text += text;
             }
         }
 

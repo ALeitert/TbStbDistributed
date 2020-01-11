@@ -88,6 +88,7 @@
             this.ltvGraphs.FullRowSelect = true;
             this.ltvGraphs.GridLines = true;
             this.ltvGraphs.Location = new System.Drawing.Point(3, 3);
+            this.ltvGraphs.MultiSelect = false;
             this.ltvGraphs.Name = "ltvGraphs";
             this.ltvGraphs.Size = new System.Drawing.Size(590, 416);
             this.ltvGraphs.TabIndex = 1;
@@ -148,6 +149,7 @@
             this.ltvClients.FullRowSelect = true;
             this.ltvClients.GridLines = true;
             this.ltvClients.Location = new System.Drawing.Point(3, 3);
+            this.ltvClients.MultiSelect = false;
             this.ltvClients.Name = "ltvClients";
             this.ltvClients.Size = new System.Drawing.Size(590, 416);
             this.ltvClients.TabIndex = 0;
@@ -189,6 +191,7 @@
             this.ltvLog.FullRowSelect = true;
             this.ltvLog.GridLines = true;
             this.ltvLog.Location = new System.Drawing.Point(3, 3);
+            this.ltvLog.MultiSelect = false;
             this.ltvLog.Name = "ltvLog";
             this.ltvLog.Size = new System.Drawing.Size(590, 416);
             this.ltvLog.TabIndex = 0;
