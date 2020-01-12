@@ -24,6 +24,7 @@ namespace TbStb.Server
         const string graphDir = @".\graphs";
         BackgroundWorker graphLoader;
 
+
         public ServerForm()
         {
             InitializeComponent();
@@ -37,6 +38,9 @@ namespace TbStb.Server
             graphLoader.DoWork += graphLoader_DoWork;
             graphLoader.RunWorkerCompleted += graphLoader_RunWorkerCompleted;
         }
+
+
+        // -- -- -- --  Log and Helper Functions  -- -- -- --
 
         private Color GetBackColor(int index, bool highlight = false)
         {
@@ -97,6 +101,9 @@ namespace TbStb.Server
             }
         }
 
+
+        // -- -- -- --  Form Events  -- -- -- --
+
         private void ServerForm_Load(object sender, EventArgs e)
         {
             UpdateGraphList();
@@ -112,6 +119,9 @@ namespace TbStb.Server
             logActive = false;
             server?.Stop();
         }
+
+
+        // -- -- -- --  Server-Client  -- -- -- --
 
         private void StartServer()
         {
@@ -252,6 +262,9 @@ namespace TbStb.Server
 
             Log("Client disconnected (" + lvi.Text + ").");
         }
+
+
+        // -- -- -- --  Loading Graphs  -- -- -- --
 
         private void UpdateGraphList()
         {
