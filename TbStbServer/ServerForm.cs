@@ -335,15 +335,14 @@ namespace TbStb.Server
             }
 
             FileStream fs = null;
+            Graph gr;
 
             try
             {
                 fs = File.Open(fullPath, FileMode.Open);
 
-                Graph gr = new Graph(fs);
+                gr = new Graph(fs);
                 gr.Name = name;
-
-                e.Result = gr;
             }
             catch (Exception ex)
             {
@@ -357,6 +356,12 @@ namespace TbStb.Server
             {
                 fs?.Dispose();
             }
+
+            e.Result = new object[]
+            {
+                gr,
+                gr.FindLargestCC()
+            };
         }
 
         private void graphLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -367,12 +372,26 @@ namespace TbStb.Server
             }
             else
             {
-                g = (Graph)e.Result;
+                object[] result = (object[])e.Result;
+
+                g = (Graph)result[0];
+                int[] largestCC = (int[])result[1];
 
                 ltvGraphs.SuspendLayout();
                 for (int i = 0; i < ltvGraphs.Items.Count; i++)
                 {
                     ListViewItem lvi = ltvGraphs.Items[i];
+
+                    if (lvi.Text == g.Name)
+                    {
+                        while (lvi.SubItems.Count < 4)
+                        {
+                            lvi.SubItems.Add(string.Empty);
+                        }
+
+                        lvi.SubItems[2].Text = g.Edges.ToString("#,##0");
+                        lvi.SubItems[3].Text = largestCC.Length.ToString("#,##0");
+                    }
                     lvi.BackColor = GetBackColor(i, lvi.Text == g.Name);
                 }
                 ltvGraphs.ResumeLayout();

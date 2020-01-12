@@ -7,6 +7,7 @@ namespace TbStb
     partial class Graph
     {
         private int[][] graph;
+        private int totalEdges = 0;
 
         public Graph(Stream input)
         {
@@ -26,13 +27,13 @@ namespace TbStb
 
                 int neighCount = int.Parse(numbers[0]);
                 graph[vId] = new int[neighCount];
+                totalEdges += neighCount;
 
                 for (int j = 0; j < neighCount; j++)
                 {
                     graph[vId][j] = int.Parse(numbers[j + 1]);
                 }
             }
-
         }
 
         public int[] this[int vId]
@@ -50,6 +51,14 @@ namespace TbStb
             get
             {
                 return graph.Length;
+            }
+        }
+
+        public int Edges
+        {
+            get
+            {
+                return totalEdges;
             }
         }
 
