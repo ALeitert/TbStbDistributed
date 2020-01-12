@@ -364,7 +364,7 @@ namespace TbStb.Server
 
             try
             {
-                fs = File.Open(fullPath, FileMode.Open);
+                fs = File.Open(fullPath, FileMode.Open, FileAccess.Read);
 
                 gr = new Graph(fs);
                 gr.Name = name;

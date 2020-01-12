@@ -64,7 +64,7 @@ namespace TbStb.Client
         private void ClientForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             logActive = false;
-            client.Close();
+            client?.Close();
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -207,7 +207,7 @@ namespace TbStb.Client
             }
             partnerProcess = null;
 
-            using (FileStream fs = new FileStream(name + ".txt", FileMode.Open))
+            using (FileStream fs = new FileStream(name, FileMode.Open, FileAccess.Read))
             {
                 g = new Graph(fs);
                 g.Name = name;
