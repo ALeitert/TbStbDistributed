@@ -66,6 +66,13 @@ namespace TbStb.Server
             }
         }
 
+        private string GetSelectedGraphName()
+        {
+            if (ltvGraphs.SelectedItems.Count == 0) return null;
+
+            return ltvGraphs.SelectedItems[0].Text;
+        }
+
         private void Log(string text)
         {
             if (!logActive) return;
@@ -414,5 +421,17 @@ namespace TbStb.Server
             GC.Collect();
         }
 
+
+        // -- -- -- --  Context Menu Graphs  -- -- -- --
+
+        private void ltvGraphs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string nameSelected = GetSelectedGraphName();
+
+            mniGraphsLoad.Enabled = nameSelected != null && nameSelected != g?.Name;
+            mniGraphsCompTb.Enabled = nameSelected == g?.Name;
+            mniGraphsCompStb.Enabled = nameSelected == g?.Name;
+            mniGraphsRepair.Enabled = nameSelected != null;
+        }
     }
 }

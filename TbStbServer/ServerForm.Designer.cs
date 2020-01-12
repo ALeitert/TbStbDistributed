@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabGraphs = new System.Windows.Forms.TabPage();
             this.ltvGraphs = new System.Windows.Forms.ListView();
@@ -46,10 +47,18 @@
             this.ltvLog = new System.Windows.Forms.ListView();
             this.clhTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clhMessage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.mnuGraphs = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mniGraphsLoad = new System.Windows.Forms.ToolStripMenuItem();
+            this.mniGraphsLine1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mniGraphsCompTb = new System.Windows.Forms.ToolStripMenuItem();
+            this.mniGraphsCompStb = new System.Windows.Forms.ToolStripMenuItem();
+            this.mniGraphsLine2 = new System.Windows.Forms.ToolStripSeparator();
+            this.mniGraphsRepair = new System.Windows.Forms.ToolStripMenuItem();
             this.tabMain.SuspendLayout();
             this.tabGraphs.SuspendLayout();
             this.tabClients.SuspendLayout();
             this.tabLog.SuspendLayout();
+            this.mnuGraphs.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabMain
@@ -84,6 +93,7 @@
             this.clhGraphCC,
             this.clhTb,
             this.clhStb});
+            this.ltvGraphs.ContextMenuStrip = this.mnuGraphs;
             this.ltvGraphs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ltvGraphs.FullRowSelect = true;
             this.ltvGraphs.GridLines = true;
@@ -94,6 +104,7 @@
             this.ltvGraphs.TabIndex = 1;
             this.ltvGraphs.UseCompatibleStateImageBehavior = false;
             this.ltvGraphs.View = System.Windows.Forms.View.Details;
+            this.ltvGraphs.SelectedIndexChanged += new System.EventHandler(this.ltvGraphs_SelectedIndexChanged);
             this.ltvGraphs.DoubleClick += new System.EventHandler(this.ltvGraphs_DoubleClick);
             // 
             // clhGraphName
@@ -208,6 +219,52 @@
             this.clhMessage.Text = "Message";
             this.clhMessage.Width = 500;
             // 
+            // mnuGraphs
+            // 
+            this.mnuGraphs.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mniGraphsLoad,
+            this.mniGraphsLine1,
+            this.mniGraphsCompTb,
+            this.mniGraphsCompStb,
+            this.mniGraphsLine2,
+            this.mniGraphsRepair});
+            this.mnuGraphs.Name = "mnuGraphs";
+            this.mnuGraphs.Size = new System.Drawing.Size(234, 126);
+            // 
+            // mniGraphsLoad
+            // 
+            this.mniGraphsLoad.Name = "mniGraphsLoad";
+            this.mniGraphsLoad.Size = new System.Drawing.Size(233, 22);
+            this.mniGraphsLoad.Text = "Load";
+            // 
+            // mniGraphsLine1
+            // 
+            this.mniGraphsLine1.Name = "mniGraphsLine1";
+            this.mniGraphsLine1.Size = new System.Drawing.Size(230, 6);
+            // 
+            // mniGraphsCompTb
+            // 
+            this.mniGraphsCompTb.Name = "mniGraphsCompTb";
+            this.mniGraphsCompTb.Size = new System.Drawing.Size(233, 22);
+            this.mniGraphsCompTb.Text = "Compute Tree-Breadth";
+            // 
+            // mniGraphsCompStb
+            // 
+            this.mniGraphsCompStb.Name = "mniGraphsCompStb";
+            this.mniGraphsCompStb.Size = new System.Drawing.Size(233, 22);
+            this.mniGraphsCompStb.Text = "Compute Strong Tree-Breadth";
+            // 
+            // mniGraphsLine2
+            // 
+            this.mniGraphsLine2.Name = "mniGraphsLine2";
+            this.mniGraphsLine2.Size = new System.Drawing.Size(230, 6);
+            // 
+            // mniGraphsRepair
+            // 
+            this.mniGraphsRepair.Name = "mniGraphsRepair";
+            this.mniGraphsRepair.Size = new System.Drawing.Size(233, 22);
+            this.mniGraphsRepair.Text = "Repair";
+            // 
             // ServerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -223,6 +280,7 @@
             this.tabGraphs.ResumeLayout(false);
             this.tabClients.ResumeLayout(false);
             this.tabLog.ResumeLayout(false);
+            this.mnuGraphs.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -247,6 +305,13 @@
         private System.Windows.Forms.ListView ltvLog;
         private System.Windows.Forms.ColumnHeader clhTime;
         private System.Windows.Forms.ColumnHeader clhMessage;
+        private System.Windows.Forms.ContextMenuStrip mnuGraphs;
+        private System.Windows.Forms.ToolStripMenuItem mniGraphsLoad;
+        private System.Windows.Forms.ToolStripSeparator mniGraphsLine1;
+        private System.Windows.Forms.ToolStripMenuItem mniGraphsCompTb;
+        private System.Windows.Forms.ToolStripMenuItem mniGraphsCompStb;
+        private System.Windows.Forms.ToolStripSeparator mniGraphsLine2;
+        private System.Windows.Forms.ToolStripMenuItem mniGraphsRepair;
     }
 }
 
