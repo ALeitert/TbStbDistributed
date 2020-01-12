@@ -264,6 +264,7 @@
             this.mniGraphsRepair.Name = "mniGraphsRepair";
             this.mniGraphsRepair.Size = new System.Drawing.Size(233, 22);
             this.mniGraphsRepair.Text = "Repair";
+            this.mniGraphsRepair.Click += new System.EventHandler(this.mniGraphsRepair_Click);
             // 
             // ServerForm
             // 

@@ -23,6 +23,7 @@ namespace TbStb.Server
         Graph g = null;
         const string graphDir = @".\graphs";
         BackgroundWorker graphLoader;
+        BackgroundWorker graphRepair;
 
 
         public ServerForm()
@@ -37,6 +38,10 @@ namespace TbStb.Server
             graphLoader = new BackgroundWorker();
             graphLoader.DoWork += graphLoader_DoWork;
             graphLoader.RunWorkerCompleted += graphLoader_RunWorkerCompleted;
+
+            graphRepair = new BackgroundWorker();
+            graphRepair.DoWork += graphRepair_DoWork;
+            graphRepair.RunWorkerCompleted += graphRepair_RunWorkerCompleted;
         }
 
 
@@ -432,6 +437,87 @@ namespace TbStb.Server
             mniGraphsCompTb.Enabled = nameSelected == g?.Name;
             mniGraphsCompStb.Enabled = nameSelected == g?.Name;
             mniGraphsRepair.Enabled = nameSelected != null;
+        }
+
+        private void mniGraphsRepair_Click(object sender, EventArgs e)
+        {
+            string nameSelected = GetSelectedGraphName();
+            if (nameSelected == null) return;
+
+            ltvGraphs.Enabled = false;
+            graphRepair.RunWorkerAsync(nameSelected);
+        }
+
+        private void graphRepair_DoWork(object sender, DoWorkEventArgs e)
+        {
+            string name = (string)e.Argument;
+            string fullDir = Path.GetFullPath(graphDir);
+            string fullPathOld = Path.Combine(fullDir, name);
+
+            if (!File.Exists(fullPathOld))
+            {
+                e.Result = null;
+                return;
+            }
+
+            string core = Path.GetFileNameWithoutExtension(fullPathOld);
+            string ext = Path.GetExtension(fullPathOld);
+
+            string nameRep = core + "_repaired" + ext;
+            string fullPathRep = Path.Combine(fullDir, nameRep);
+
+            if (File.Exists(fullPathRep))
+            {
+                e.Result = null;
+                return;
+            }
+
+            // -- -- -- -- -- --
+            g = null;
+            GC.Collect();
+
+            FileStream fsIn = null;
+            FileStream fsOut = null;
+
+            try
+            {
+                fsIn = File.Open(fullPathOld, FileMode.Open, FileAccess.Read);
+                fsOut = File.Open(fullPathRep, FileMode.OpenOrCreate);
+
+                Graph.Repair(fsIn, fsOut);
+            }
+            catch (Exception ex)
+            {
+                Log("Unable to repair graph due to exception: " + ex.GetType().Name);
+                Log(ex.Message);
+
+                e.Result = null;
+                return;
+            }
+            finally
+            {
+                fsIn?.Dispose();
+                fsOut?.Dispose();
+            }
+
+            e.Result = Path.GetFileName(fullPathRep);
+        }
+
+        private void graphRepair_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            GC.Collect();
+
+            if (e.Result == null)
+            {
+                MessageBox.Show("Unable to repair graph.");
+            }
+            else
+            {
+                MessageBox.Show("Graph repaired and stored in: " + (string)e.Result);
+            }
+
+            UpdateGraphList();
+            ltvGraphs.Enabled = true;
         }
     }
 }
