@@ -55,6 +55,9 @@
     <Compile Include="..\Graph\Graph.LayeringPartition.cs">
       <Link>Graph\Graph.LayeringPartition.cs</Link>
     </Compile>
+    <Compile Include="..\Graph\Graph.Repair.cs">
+      <Link>Graph\Graph.Repair.cs</Link>
+    </Compile>
     <Compile Include="..\Graph\UnionFind.cs">
       <Link>Graph\UnionFind.cs</Link>
     </Compile>
