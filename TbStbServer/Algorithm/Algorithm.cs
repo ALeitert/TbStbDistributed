@@ -75,6 +75,9 @@ namespace TbStb.Server
             }
         }
 
+        public string GraphName { get; private set; }
+        public int GraphSize { get; private set; }
+
 
         public void Start(Graph g)
         {
@@ -84,6 +87,8 @@ namespace TbStb.Server
             }
 
             State = AlgorithmState.Running;
+            GraphName = g.Name;
+            GraphSize = g.Vertices;
 
             Thread preT = new Thread(Preprocess);
             preT.Start(g);
@@ -97,6 +102,8 @@ namespace TbStb.Server
             graph = null;
             g = null;
             GC.Collect();
+
+            OnPreprocess();
 
             lock (assignTasksLock) // Just in case.
             {
@@ -115,6 +122,8 @@ namespace TbStb.Server
                 assignTasksThread.Start();
             }
         }
+
+        protected virtual void OnPreprocess() { }
 
         protected void Restart()
         {
