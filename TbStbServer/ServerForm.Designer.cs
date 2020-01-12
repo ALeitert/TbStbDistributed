@@ -94,6 +94,7 @@
             this.ltvGraphs.TabIndex = 1;
             this.ltvGraphs.UseCompatibleStateImageBehavior = false;
             this.ltvGraphs.View = System.Windows.Forms.View.Details;
+            this.ltvGraphs.DoubleClick += new System.EventHandler(this.ltvGraphs_DoubleClick);
             // 
             // clhGraphName
             // 

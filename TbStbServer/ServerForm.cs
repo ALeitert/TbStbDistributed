@@ -38,18 +38,27 @@ namespace TbStb.Server
             graphLoader.RunWorkerCompleted += graphLoader_RunWorkerCompleted;
         }
 
-        private Color GetBackColor(int index)
+        private Color GetBackColor(int index, bool highlight = false)
         {
-            Color oddColor = Color.White;
-            Color evenColor = Color.FromArgb(228, 232, 237);
-
-            if (index % 2 == 1)
+            Color[] normalCol = new Color[]
             {
-                return oddColor;
+                Color.FromArgb(228, 232, 237),
+                Color.White
+            };
+
+            Color[] hlCol = new Color[]
+            {
+                Color.LimeGreen,
+                Color.LawnGreen
+            };
+
+            if (highlight)
+            {
+                return hlCol[index % hlCol.Length];
             }
             else
             {
-                return evenColor;
+                return normalCol[index % hlCol.Length];
             }
         }
 
@@ -295,19 +304,82 @@ namespace TbStb.Server
                     lvi.SubItems.Add(vSize.ToString("#,##0"));
                 }
 
-                lvi.BackColor = GetBackColor(ltvGraphs.Items.Count);
+                lvi.BackColor = GetBackColor(ltvGraphs.Items.Count, g?.Name == name);
                 ltvGraphs.Items.Add(lvi);
             }
 
             ltvGraphs.ResumeLayout();
         }
 
+        private void ltvGraphs_DoubleClick(object sender, EventArgs e)
+        {
+            if (ltvGraphs.SelectedItems.Count == 0) return;
+
+            string nameSelected = ltvGraphs.SelectedItems[0].Text;
+            if (g?.Name == nameSelected) return;
+
+            ltvGraphs.Enabled = false;
+            graphLoader.RunWorkerAsync(nameSelected);
+        }
+
         private void graphLoader_DoWork(object sender, DoWorkEventArgs e)
         {
+            string name = (string)e.Argument;
+            string fullDir = Path.GetFullPath(graphDir);
+            string fullPath = Path.Combine(fullDir, name);
+
+            if (!File.Exists(fullPath))
+            {
+                e.Result = null;
+                return;
+            }
+
+            FileStream fs = null;
+
+            try
+            {
+                fs = File.Open(fullPath, FileMode.Open);
+
+                Graph gr = new Graph(fs);
+                gr.Name = name;
+
+                e.Result = gr;
+            }
+            catch (Exception ex)
+            {
+                Log("Unable to load graph due to exception: " + ex.GetType().Name);
+                Log(ex.Message);
+
+                e.Result = null;
+                return;
+            }
+            finally
+            {
+                fs?.Dispose();
+            }
         }
 
         private void graphLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (e.Result == null)
+            {
+                MessageBox.Show("Unable to load graph.");
+            }
+            else
+            {
+                g = (Graph)e.Result;
+
+                ltvGraphs.SuspendLayout();
+                for (int i = 0; i < ltvGraphs.Items.Count; i++)
+                {
+                    ListViewItem lvi = ltvGraphs.Items[i];
+                    lvi.BackColor = GetBackColor(i, lvi.Text == g.Name);
+                }
+                ltvGraphs.ResumeLayout();
+            }
+
+            ltvGraphs.Enabled = true;
+            GC.Collect();
         }
 
     }
