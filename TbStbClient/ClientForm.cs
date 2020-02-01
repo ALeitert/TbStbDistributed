@@ -22,6 +22,9 @@ namespace TbStb.Client
         private Graph g = null;
         private Process partnerProcess = null;
 
+        const string graphDir = @".\graphs";
+
+
         public ClientForm()
         {
             InitializeComponent();
@@ -198,6 +201,9 @@ namespace TbStb.Client
                 return;
             }
 
+            string fullDir = Path.GetFullPath(graphDir);
+            string fullPath = Path.Combine(fullDir, name);
+
             Log("Loading graph \"" + name + "\"");
             int startTime = Environment.TickCount;
 
@@ -207,7 +213,7 @@ namespace TbStb.Client
             }
             partnerProcess = null;
 
-            using (FileStream fs = new FileStream(name, FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream(fullPath, FileMode.Open, FileAccess.Read))
             {
                 g = new Graph(fs);
                 g.Name = name;
