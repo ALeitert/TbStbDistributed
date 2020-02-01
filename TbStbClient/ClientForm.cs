@@ -20,7 +20,9 @@ namespace TbStb.Client
         private delegate void ProcessMessageDelegate(string msg);
 
         private Graph g = null;
+
         private Process partnerProcess = null;
+        const string partnerExe = "PotentialPartners.exe";
 
         const string graphDir = @".\graphs";
 
@@ -299,7 +301,7 @@ namespace TbStb.Client
             {
                 ProcessStartInfo psi = new ProcessStartInfo();
                 psi.CreateNoWindow = true;
-                psi.FileName = "PotentialPartners.exe";
+                psi.FileName = partnerExe;
                 psi.RedirectStandardInput = true;
                 psi.RedirectStandardOutput = true;
                 psi.UseShellExecute = false;
