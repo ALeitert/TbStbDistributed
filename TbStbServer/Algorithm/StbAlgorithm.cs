@@ -19,6 +19,7 @@ namespace TbStb.Server
         int[][] potPartCtrs;
 
         BitArray isValid;
+        BitArray wasProcessed;
 
 
         public StbAlgorithm() : base() { }
@@ -30,7 +31,8 @@ namespace TbStb.Server
             base.OnPreprocess();
             potPartners = new int[GraphSize][][];
             potPartCtrs = new int[GraphSize][];
-            isValid = new BitArray(GraphSize, false);
+            isValid = new BitArray(GraphSize, true);
+            wasProcessed = new BitArray(GraphSize, false);
         }
 
         protected override bool Conclude()
@@ -41,7 +43,7 @@ namespace TbStb.Server
             // Anything left?
             for (int i = 0; i < GraphSize; i++)
             {
-                if (isValid[i])
+                if (isValid[i] && wasProcessed[i])
                 {
                     Result = rho;
                     return true;
@@ -126,7 +128,7 @@ namespace TbStb.Server
                 {
                     int[] partners = potPartners[i][j];
 
-                    for (int p = 0; p < partners[1] + 2; p++)
+                    for (int p = 0; p < partners.Length; p++)
                     {
                         int pId = partners[p];
                         if (isValid[pId]) continue;
@@ -155,6 +157,7 @@ namespace TbStb.Server
             while (q.Count > 0)
             {
                 int vId = q.Dequeue();
+                if (dependents[vId] == null) continue;
 
                 foreach (Dependent dep in dependents[vId])
                 {
@@ -177,7 +180,7 @@ namespace TbStb.Server
 
         protected override byte[] GetNextTask(int vId)
         {
-            isValid[vId] = true;
+            wasProcessed[vId] = true;
             string msg = string.Format(
                 "{0}|partner|{1}|{2}",
                 GraphName,
@@ -203,7 +206,7 @@ namespace TbStb.Server
             string graph = msgParts[0];
             string task = msgParts[1];
             int cVId = int.Parse(msgParts[2]);
-            int cRho = int.Parse(msgParts[2]);
+            int cRho = int.Parse(msgParts[3]);
 
             if (graph != GraphName ||
                 task != "partner" ||
@@ -269,6 +272,11 @@ namespace TbStb.Server
         protected override void OnRestart()
         {
             rho++;
+            potPartners = new int[GraphSize][][];
+            potPartCtrs = new int[GraphSize][];
+            isValid = new BitArray(GraphSize, true);
+            wasProcessed = new BitArray(GraphSize, false);
+            GC.Collect();
         }
     }
 }
