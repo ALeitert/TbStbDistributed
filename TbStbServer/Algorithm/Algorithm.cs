@@ -131,12 +131,6 @@ namespace TbStb.Server
 
             lock (assignTasksLock)
             {
-                for (int i = 0; i < allClients.Count; i++)
-                {
-                    if (allClients[i] == null) continue;
-                    freeClientsQ.Enqueue(i);
-                }
-
                 vertexQPtr = 0;
 
                 assignTasksThread = new Thread(AssignTasks);
@@ -268,6 +262,7 @@ namespace TbStb.Server
             // Assign new task to client.
             lock (assignTasksLock)
             {
+                currentlyProcessing--;
                 freeClientsQ.Enqueue(clientId);
 
                 if (assignTasksThread == null)
@@ -311,16 +306,17 @@ namespace TbStb.Server
                 }
 
                 OnProcessMessages(vId, msg);
-
-                lock (assignTasksLock)
-                {
-                    currentlyProcessing--;
-                }
             }
 
             lock (assignTasksLock)
             {
-                if (currentlyProcessing > 0) return;
+                int totalToProcess =
+                    currentlyProcessing +
+                    redoIdsQ.Count +
+                    vertexQ.Length - vertexQPtr;
+
+
+                if (totalToProcess > 0) return;
             }
 
             // Done processing.

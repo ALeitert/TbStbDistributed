@@ -73,6 +73,8 @@
     <Compile Include="..\Network\ServerBase.cs">
       <Link>Network\ServerBase.cs</Link>
     </Compile>
+    <Compile Include="Algorithm\Algorithm.cs" />
+    <Compile Include="Algorithm\StbAlgorithm.cs" />
     <Compile Include="ServerForm.cs">
       <SubType>Form</SubType>
     </Compile>
