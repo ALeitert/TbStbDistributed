@@ -24,6 +24,8 @@ void Base64Writer::write(int num)
 
 void Base64Writer::flush()
 {
+    if (bufferCount == 0) return;
+
     // Convert buffer to base64 string
     int i = 0;
     for (; i < bufferCount; i += 3)
