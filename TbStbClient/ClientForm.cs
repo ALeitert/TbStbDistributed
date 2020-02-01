@@ -167,15 +167,15 @@ namespace TbStb.Client
             byte[] answerPt1 = Encoding.UTF8.GetBytes(msg);
             byte[] answerPt2 = result;
 
-            int fullAnswerSize = answerPt1.Length + answerPt2.Length + 8; // +8 for 2 integers stating the number of bytes in each part of the answer.
+            // +4 for integer stating the number of bytes in first part of the answer.
+            int fullAnswerSize = 4 + answerPt1.Length + answerPt2.Length; 
             byte[] fullAnswer = new byte[fullAnswerSize];
 
             byte[] sizePt1 = BitConverter.GetBytes(answerPt1.Length);
-            byte[] sizePt2 = BitConverter.GetBytes(answerPt2.Length);
 
             int ansInd = 0;
 
-            foreach (byte[] arr in new byte[][] { sizePt1, answerPt1, sizePt2, answerPt2 })
+            foreach (byte[] arr in new byte[][] { sizePt1, answerPt1, answerPt2 })
             {
                 Array.Copy(arr, 0, fullAnswer, ansInd, arr.Length);
                 ansInd += arr.Length;
@@ -183,7 +183,6 @@ namespace TbStb.Client
 
             // Free some memory directly.
             sizePt1 = null;
-            sizePt2 = null;
             answerPt1 = null;
             answerPt2 = null;
             result = null;
