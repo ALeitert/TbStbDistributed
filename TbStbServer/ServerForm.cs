@@ -25,6 +25,8 @@ namespace TbStb.Server
         BackgroundWorker graphLoader;
         BackgroundWorker graphRepair;
 
+        Algorithm algo = null;
+
 
         public ServerForm()
         {
@@ -207,6 +209,14 @@ namespace TbStb.Server
 
         private void Server_MessageFromClient(object sender, MessageFromClientEventArgs e)
         {
+            if (algo != null && algo.State == AlgorithmState.Running)
+            {
+                algo.NewClientMessage(e.ClientId, e.RawMessage);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
         private void Server_ClientDisconnected(object sender, ClientDisconnectedEventArgs e)
@@ -250,6 +260,8 @@ namespace TbStb.Server
 
                 ltvClients.Items.Add(lvi);
                 clientList.Add(client);
+
+                algo?.AddClient(client);
             }
 
             ltvClients.ResumeLayout();
@@ -265,8 +277,8 @@ namespace TbStb.Server
                 return;
             }
 
-
             clientList[clientId] = null;
+            algo?.RemoveClient(clientId);
 
             ListViewItem lvi = ltvClients.Items[clientId];
             lvi.ForeColor = Color.Gray;
@@ -518,6 +530,20 @@ namespace TbStb.Server
 
             UpdateGraphList();
             ltvGraphs.Enabled = true;
+        }
+
+        private void mniGraphsCompStb_Click(object sender, EventArgs e)
+        {
+            if (algo != null && algo.State != AlgorithmState.Done) return;
+
+            algo = new StbAlgorithm(clientList);
+            algo.Start(g);
+            algo.AlgorithmCompleted += algo_AlgorithmCompleted;
+        }
+
+        private void algo_AlgorithmCompleted(object sender, EventArgs e)
+        {
+            MessageBox.Show(algo.Result.ToString());
         }
     }
 }

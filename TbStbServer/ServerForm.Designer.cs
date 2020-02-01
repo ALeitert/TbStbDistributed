@@ -38,6 +38,13 @@
             this.clhGraphCC = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clhTb = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clhStb = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.mnuGraphs = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mniGraphsLoad = new System.Windows.Forms.ToolStripMenuItem();
+            this.mniGraphsLine1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mniGraphsCompTb = new System.Windows.Forms.ToolStripMenuItem();
+            this.mniGraphsCompStb = new System.Windows.Forms.ToolStripMenuItem();
+            this.mniGraphsLine2 = new System.Windows.Forms.ToolStripSeparator();
+            this.mniGraphsRepair = new System.Windows.Forms.ToolStripMenuItem();
             this.tabClients = new System.Windows.Forms.TabPage();
             this.ltvClients = new System.Windows.Forms.ListView();
             this.clhClientIP = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -47,18 +54,11 @@
             this.ltvLog = new System.Windows.Forms.ListView();
             this.clhTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clhMessage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.mnuGraphs = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.mniGraphsLoad = new System.Windows.Forms.ToolStripMenuItem();
-            this.mniGraphsLine1 = new System.Windows.Forms.ToolStripSeparator();
-            this.mniGraphsCompTb = new System.Windows.Forms.ToolStripMenuItem();
-            this.mniGraphsCompStb = new System.Windows.Forms.ToolStripMenuItem();
-            this.mniGraphsLine2 = new System.Windows.Forms.ToolStripSeparator();
-            this.mniGraphsRepair = new System.Windows.Forms.ToolStripMenuItem();
             this.tabMain.SuspendLayout();
             this.tabGraphs.SuspendLayout();
+            this.mnuGraphs.SuspendLayout();
             this.tabClients.SuspendLayout();
             this.tabLog.SuspendLayout();
-            this.mnuGraphs.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabMain
@@ -140,6 +140,54 @@
             this.clhStb.Text = "stb(G)";
             this.clhStb.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // mnuGraphs
+            // 
+            this.mnuGraphs.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mniGraphsLoad,
+            this.mniGraphsLine1,
+            this.mniGraphsCompTb,
+            this.mniGraphsCompStb,
+            this.mniGraphsLine2,
+            this.mniGraphsRepair});
+            this.mnuGraphs.Name = "mnuGraphs";
+            this.mnuGraphs.Size = new System.Drawing.Size(234, 126);
+            // 
+            // mniGraphsLoad
+            // 
+            this.mniGraphsLoad.Name = "mniGraphsLoad";
+            this.mniGraphsLoad.Size = new System.Drawing.Size(233, 22);
+            this.mniGraphsLoad.Text = "Load";
+            // 
+            // mniGraphsLine1
+            // 
+            this.mniGraphsLine1.Name = "mniGraphsLine1";
+            this.mniGraphsLine1.Size = new System.Drawing.Size(230, 6);
+            // 
+            // mniGraphsCompTb
+            // 
+            this.mniGraphsCompTb.Name = "mniGraphsCompTb";
+            this.mniGraphsCompTb.Size = new System.Drawing.Size(233, 22);
+            this.mniGraphsCompTb.Text = "Compute Tree-Breadth";
+            // 
+            // mniGraphsCompStb
+            // 
+            this.mniGraphsCompStb.Name = "mniGraphsCompStb";
+            this.mniGraphsCompStb.Size = new System.Drawing.Size(233, 22);
+            this.mniGraphsCompStb.Text = "Compute Strong Tree-Breadth";
+            this.mniGraphsCompStb.Click += new System.EventHandler(this.mniGraphsCompStb_Click);
+            // 
+            // mniGraphsLine2
+            // 
+            this.mniGraphsLine2.Name = "mniGraphsLine2";
+            this.mniGraphsLine2.Size = new System.Drawing.Size(230, 6);
+            // 
+            // mniGraphsRepair
+            // 
+            this.mniGraphsRepair.Name = "mniGraphsRepair";
+            this.mniGraphsRepair.Size = new System.Drawing.Size(233, 22);
+            this.mniGraphsRepair.Text = "Repair";
+            this.mniGraphsRepair.Click += new System.EventHandler(this.mniGraphsRepair_Click);
+            // 
             // tabClients
             // 
             this.tabClients.Controls.Add(this.ltvClients);
@@ -219,53 +267,6 @@
             this.clhMessage.Text = "Message";
             this.clhMessage.Width = 500;
             // 
-            // mnuGraphs
-            // 
-            this.mnuGraphs.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mniGraphsLoad,
-            this.mniGraphsLine1,
-            this.mniGraphsCompTb,
-            this.mniGraphsCompStb,
-            this.mniGraphsLine2,
-            this.mniGraphsRepair});
-            this.mnuGraphs.Name = "mnuGraphs";
-            this.mnuGraphs.Size = new System.Drawing.Size(234, 126);
-            // 
-            // mniGraphsLoad
-            // 
-            this.mniGraphsLoad.Name = "mniGraphsLoad";
-            this.mniGraphsLoad.Size = new System.Drawing.Size(233, 22);
-            this.mniGraphsLoad.Text = "Load";
-            // 
-            // mniGraphsLine1
-            // 
-            this.mniGraphsLine1.Name = "mniGraphsLine1";
-            this.mniGraphsLine1.Size = new System.Drawing.Size(230, 6);
-            // 
-            // mniGraphsCompTb
-            // 
-            this.mniGraphsCompTb.Name = "mniGraphsCompTb";
-            this.mniGraphsCompTb.Size = new System.Drawing.Size(233, 22);
-            this.mniGraphsCompTb.Text = "Compute Tree-Breadth";
-            // 
-            // mniGraphsCompStb
-            // 
-            this.mniGraphsCompStb.Name = "mniGraphsCompStb";
-            this.mniGraphsCompStb.Size = new System.Drawing.Size(233, 22);
-            this.mniGraphsCompStb.Text = "Compute Strong Tree-Breadth";
-            // 
-            // mniGraphsLine2
-            // 
-            this.mniGraphsLine2.Name = "mniGraphsLine2";
-            this.mniGraphsLine2.Size = new System.Drawing.Size(230, 6);
-            // 
-            // mniGraphsRepair
-            // 
-            this.mniGraphsRepair.Name = "mniGraphsRepair";
-            this.mniGraphsRepair.Size = new System.Drawing.Size(233, 22);
-            this.mniGraphsRepair.Text = "Repair";
-            this.mniGraphsRepair.Click += new System.EventHandler(this.mniGraphsRepair_Click);
-            // 
             // ServerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -279,9 +280,9 @@
             this.Shown += new System.EventHandler(this.ServerForm_Shown);
             this.tabMain.ResumeLayout(false);
             this.tabGraphs.ResumeLayout(false);
+            this.mnuGraphs.ResumeLayout(false);
             this.tabClients.ResumeLayout(false);
             this.tabLog.ResumeLayout(false);
-            this.mnuGraphs.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
