@@ -46,6 +46,11 @@ namespace TbStb.Client
             {
                 string logTxt = string.Format("{0:HH:mm:ss}  {1}", DateTime.Now, text);
                 lstLog.Items.Add(logTxt);
+
+                while (lstLog.Items.Count > 25)
+                {
+                    lstLog.Items.RemoveAt(0);
+                }
             }
         }
 
