@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TbStb
 {
@@ -12,7 +13,17 @@ namespace TbStb
             {
                 if (layPartition == null)
                 {
-                    layPartition = GetLayeringPartition(0);
+                    int[] cc = FindLargestCC();
+
+                    int minId = cc[0];
+                    foreach (int vId in cc)
+                    {
+                        minId = Math.Min(minId, vId);
+                    }
+
+                    cc = null;
+
+                    layPartition = GetLayeringPartition(minId);
                 }
 
                 return layPartition;
