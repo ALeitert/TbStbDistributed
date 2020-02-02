@@ -160,7 +160,7 @@ namespace TbStb.Client
                     break;
 
                 case "clDist":
-                    result = FindDistanceToClusters(graph, vId);
+                    result = FindMaxDistanceToClusters(graph, vId);
                     break;
 
                 default:
@@ -175,7 +175,7 @@ namespace TbStb.Client
             byte[] answerPt2 = result;
 
             // +4 for integer stating the number of bytes in first part of the answer.
-            int fullAnswerSize = 4 + answerPt1.Length + answerPt2.Length; 
+            int fullAnswerSize = 4 + answerPt1.Length + answerPt2.Length;
             byte[] fullAnswer = new byte[fullAnswerSize];
 
             byte[] sizePt1 = BitConverter.GetBytes(answerPt1.Length);
@@ -355,9 +355,35 @@ namespace TbStb.Client
         /// <returns>
         /// The message to the server as byte-array.
         /// </returns>
-        private byte[] FindDistanceToClusters(string graph, int vId)
+        private byte[] FindMaxDistanceToClusters(string graph, int vId)
         {
-            throw new NotImplementedException();
+            LoadGraph(graph);
+
+            int[][] layPart = g.LayeringPartition;
+            byte[] result = new byte[layPart.Length * 4];
+
+            BfsResult bfs = g.Bfs(vId);
+
+            for (int i = 0; i < layPart.Length; i++)
+            {
+                int dis = -1;
+
+                foreach (int uId in layPart[i])
+                {
+                    dis = Math.Max(bfs.Distances[uId], dis);
+                }
+
+                // Convert distance to byte[].
+                byte[] num = BitConverter.GetBytes(dis);
+
+                for (int j = 0; j < num.Length; j++)
+                {
+                    result[4 * i + j] = num[j];
+                }
+            }
+
+            return result;
         }
+
     }
 }
