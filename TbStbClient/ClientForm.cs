@@ -362,6 +362,9 @@ namespace TbStb.Client
             int[][] layPart = g.LayeringPartition;
             byte[] result = new byte[layPart.Length * 4];
 
+            Log(string.Format("Computing maximum distance to clusters with vId = {0} ... ", vId));
+            int startTime = Environment.TickCount;
+
             BfsResult bfs = g.Bfs(vId);
 
             for (int i = 0; i < layPart.Length; i++)
@@ -382,6 +385,7 @@ namespace TbStb.Client
                 }
             }
 
+            LogAppend(string.Format("Done ({0:#,##0} ms).", Environment.TickCount - startTime));
             return result;
         }
 
