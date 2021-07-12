@@ -168,6 +168,7 @@
             this.mniGraphsCompTb.Name = "mniGraphsCompTb";
             this.mniGraphsCompTb.Size = new System.Drawing.Size(233, 22);
             this.mniGraphsCompTb.Text = "Compute Tree-Breadth";
+            this.mniGraphsCompTb.Click += new System.EventHandler(this.mniGraphsCompTb_Click);
             // 
             // mniGraphsCompStb
             // 

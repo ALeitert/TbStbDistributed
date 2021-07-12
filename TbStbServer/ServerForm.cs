@@ -540,6 +540,15 @@ namespace TbStb.Server
             algo.Start(g);
             algo.AlgorithmCompleted += algo_AlgorithmCompleted;
         }
+        
+        private void mniGraphsCompTb_Click(object sender, EventArgs e)
+        {
+            if (algo != null && algo.State != AlgorithmState.Done) return;
+
+            algo = new TbAlgorithm(clientList);
+            algo.Start(g);
+            algo.AlgorithmCompleted += algo_AlgorithmCompleted;
+        }
 
         private void algo_AlgorithmCompleted(object sender, EventArgs e)
         {
