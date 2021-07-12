@@ -75,6 +75,7 @@
     </Compile>
     <Compile Include="Algorithm\Algorithm.cs" />
     <Compile Include="Algorithm\StbAlgorithm.cs" />
+    <Compile Include="Algorithm\TbAlgorithm.cs" />
     <Compile Include="ServerForm.cs">
       <SubType>Form</SubType>
     </Compile>
