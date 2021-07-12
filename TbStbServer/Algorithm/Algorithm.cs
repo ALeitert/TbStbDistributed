@@ -98,12 +98,13 @@ namespace TbStb.Server
         {
             Graph g = (Graph)graph;
             int[] vertices = g.FindLargestCC();
+            Array.Sort(vertices);
+
+            OnPreprocess(g);
 
             graph = null;
             g = null;
             GC.Collect();
-
-            OnPreprocess();
 
             lock (assignTasksLock) // Just in case.
             {
@@ -123,7 +124,7 @@ namespace TbStb.Server
             }
         }
 
-        protected virtual void OnPreprocess() { }
+        protected virtual void OnPreprocess(Graph g) { }
 
         protected void Restart()
         {

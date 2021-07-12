@@ -26,9 +26,9 @@ namespace TbStb.Server
         public StbAlgorithm(IEnumerable<ClientBase> clients) : base(clients) { }
 
 
-        protected override void OnPreprocess()
+        protected override void OnPreprocess(Graph g)
         {
-            base.OnPreprocess();
+            base.OnPreprocess(g);
             potPartners = new int[GraphSize][][];
             potPartCtrs = new int[GraphSize][];
             isValid = new BitArray(GraphSize, true);
@@ -193,6 +193,8 @@ namespace TbStb.Server
 
         protected override void OnProcessMessages(int vId, byte[] msg)
         {
+            // --- Decode Message. ---
+
             int pt1Len = BitConverter.ToInt32(msg, 0);
             string pt1 = Encoding.UTF8.GetString(msg, 4, pt1Len);
 
@@ -216,7 +218,9 @@ namespace TbStb.Server
                 throw new Exception();
             }
 
-            // Read 
+
+            // --- Read Message. ---
+
             int pt2Ptr = 4 + pt1Len;
             if (pt2Ptr >= msg.Length)
             {
